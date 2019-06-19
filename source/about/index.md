@@ -10,7 +10,7 @@ fixed: false
 
 ### Who Are We?
 
-We are lovers graduated from [School of Data and Computer Science](http://sdcs.sysu.edu.cn/) in [Sun Yat-Sen university](http://www.sysu.edu.cn/2012/en/index.htm). 
+We are lovers:couple_with_heart: graduated from [School of Data and Computer Science](http://sdcs.sysu.edu.cn/) in [Sun Yat-Sen university](http://www.sysu.edu.cn/2012/en/index.htm). 
 
 ### What This Blog for?
 
