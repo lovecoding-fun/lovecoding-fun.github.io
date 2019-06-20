@@ -7,4 +7,6 @@ header-img:
 tags:
 ---
 
-We Are Graduated!
+We Are Graduated! :clap::tada:
+
+Ready to move on! :muscle:
