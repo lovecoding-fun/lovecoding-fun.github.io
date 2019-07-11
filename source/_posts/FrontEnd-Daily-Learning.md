@@ -10,15 +10,16 @@ tags: FE
 recap and cheat sheet ，记录每天学到的小东西/想法。
 
 ##### 2019/7/11
-React 16.8 提出了 `hook` 的概念，函数式组件也可以拥有自己的状态。现在的工作项目已经摒弃了 `class` ，改用函数式组件，正在慢慢摸索中。
-今天在腾讯[IMWeb前端博客](http://imweb.io/)中看到了两篇介绍 `React hook` 的文章，受益匪浅，简单记录一下。
-1）[react hook——你可能不是“我”所认识的useEffect](https://imweb.io/topic/5cd845cadcd62f86299fcd76)
-这篇介绍了 `useEffect` 这个API，用它模拟了class组件的生命周期函数。`useEffect` 用于执行副作用，相当于 `ComponentDidMount` 和 `ComponentDidUpdate`。该API有两个参数和一个返回值。第一个参数是一个副作用函数，返回值是清除函数，相当于 `ComponentWillUnmount`，每一次 `render` 都会执行副作用和清除上一次副作用。**第二个参数是一个数组，传入的是副作用函数所需要的依赖，当任一依赖更新时，会重新生成一个新的副作用并执行；如果传入一个空数组，没有依赖，只会执行一次，相当于 `didMount`；如果不传，就是没有说明自己有没有依赖（注意是不知道有没有，不是没有！），每次 `render` 时就执行，相当于 `ComponentDidUpdate` 。**
-最后还讲了 `useEffect` 和 `useLayoutEffect` 的区别，简单来说前者是异步的，后者是同步的。还没好好深入这部分，TODO。
+&nbsp; &nbsp; React 16.8 提出了 `hook` 的概念，函数式组件也可以拥有自己的状态。现在的工作项目已经摒弃了 `class` ，改用函数式组件，正在慢慢摸索中。
+&nbsp; &nbsp; 今天在腾讯[IMWeb前端博客](http://imweb.io/)中看到了两篇介绍 `React hook` 的文章，受益匪浅，简单记录一下。
 
-2）[可能你的react函数组件从来没有优化过](https://imweb.io/topic/5d1e3657f7b5692b080f2651)
-优化问题真是我一个痛点。这篇文章很清楚地解释了 `Hooks` 一些可用于组件优化的API。强推！
-特别地，文章介绍了当函数组件中传入的 `props` 值为函数时，由于每一次执行或重新执行，作用域里面一切都是重新开始，函数不是简单数据类型，不能画上等号，子组件都会重新渲染。针对这个问题文章提出了几种解决办法：
+一、[react hook——你可能不是“我”所认识的useEffect](https://imweb.io/topic/5cd845cadcd62f86299fcd76)
+&nbsp; &nbsp; 这篇介绍了 `useEffect` 这个API，用它模拟了class组件的生命周期函数。`useEffect` 用于执行副作用，相当于 `ComponentDidMount` 和 `ComponentDidUpdate`。该API有两个参数和一个返回值。第一个参数是一个副作用函数，返回值是清除函数，相当于 `ComponentWillUnmount`，每一次 `render` 都会执行副作用和清除上一次副作用。**第二个参数是一个数组，传入的是副作用函数所需要的依赖，当任一依赖更新时，会重新生成一个新的副作用并执行；如果传入一个空数组，没有依赖，只会执行一次，相当于 `didMount`；如果不传，就是没有说明自己有没有依赖（注意是不知道有没有，不是没有！），每次 `render` 时就执行，相当于 `ComponentDidUpdate` 。**
+&nbsp; &nbsp; 最后还讲了 `useEffect` 和 `useLayoutEffect` 的区别，简单来说前者是异步的，后者是同步的。还没好好深入这部分，TODO。
+
+二、[可能你的react函数组件从来没有优化过](https://imweb.io/topic/5d1e3657f7b5692b080f2651)
+&nbsp; &nbsp; 优化问题真是我一个痛点。这篇文章很清楚地解释了 `Hooks` 一些可用于组件优化的API。强推！
+&nbsp; &nbsp; 特别地，文章介绍了当函数组件中传入的 `props` 值为函数时，由于每一次执行或重新执行，作用域里面一切都是重新开始，函数不是简单数据类型，不能画上等号，子组件都会重新渲染。针对这个问题文章提出了几种解决办法：
 1） 作为 `props` 的函数在函数组件外定义，函数组件用 `React.memo()` 包裹。
  `React.memo()` 类似于 `PureComponent` 和 `ComponentDidUpdate` ，如果函数组件的 `props` 值都一样，就会跳过该组件的执行，减少不必要的渲染，实现性能优化。
 2） 作为 `props` 的函数在函数组件内定义，使用`useCallBack` 或 `useMemo`包裹，函数组件用 `React.memo()` 包裹。
@@ -27,7 +28,7 @@ React 16.8 提出了 `hook` 的概念，函数式组件也可以拥有自己的�
 
 
 ##### 2019/7/10
-今天在项目中接触到了 `symbol`，鉴于之前一直没有注意这个数据类型，在今天补上。 `symbol` 是 ES6 新增的**基本**数据类型。它的使用如下：
+&nbsp; &nbsp; 今天在项目中接触到了 `symbol`，鉴于之前一直没有注意这个数据类型，在今天补上。 `symbol` 是 ES6 新增的**基本**数据类型。它的使用如下：
 ```
 const s1 = Symbol();
 const s2 = Symbol();
