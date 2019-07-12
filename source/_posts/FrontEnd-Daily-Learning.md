@@ -55,6 +55,7 @@ function safeJsonParse<T>(str): { ok: true, value: T } | { ok: false } {
 - 宏任务执行完毕后，立即依次执行当前微任务队列中所有微任务。
 - 检查渲染，由 GUI 线程接管。
 - 渲染完毕后，由 JS 引擎线程接管，从时间队列中获取并执行下一个宏任务。
+
 7）在第六点中提到的是一个进阶的概念，对应一道题目，如果代码中依次有 `setTimeout` 和 `Promise` ，是会先打印出 `Promise` 的执行结果的。
 
 
@@ -67,10 +68,10 @@ function safeJsonParse<T>(str): { ok: true, value: T } | { ok: false } {
 &emsp;&emsp;优化问题真是我一个痛点。这篇文章很清楚地解释了 `Hooks` 一些可用于组件优化的API。强推！
 &emsp;&emsp; 特别地，文章介绍了当函数组件中传入的 `props` 值为函数时，由于每一次执行或重新执行，作用域里面一切都是重新开始，函数不是简单数据类型，不能画上等号，子组件都会重新渲染。针对这个问题文章提出了几种解决办法：
 1） 作为 `props` 的函数在函数组件外定义，函数组件用 `React.memo()` 包裹。
- `React.memo()` 类似于 `PureComponent` 和 `ComponentDidUpdate` ，如果函数组件的 `props` 值都一样，就会跳过该组件的执行，减少不必要的渲染，实现性能优化。
+ &emsp;&emsp; `React.memo()` 类似于 `PureComponent` 和 `ComponentDidUpdate` ，如果函数组件的 `props` 值都一样，就会跳过该组件的执行，减少不必要的渲染，实现性能优化。
 2） 作为 `props` 的函数在函数组件内定义，使用`useCallBack` 或 `useMemo`包裹，函数组件用 `React.memo()` 包裹。
-`useCallback(() => {}, [deps])` 返回一个函数，当 `deps` 不变时（如传入空数组，表示没有依赖），都是同一个函数。`const a = useMemo(() => memorizeValue, [deps])`，当 `deps` 不变时，`a` 的值还是上次的 `memorizeValue`，省去了重新计算的过程。
-注意当 `memorizeValue` 是一个函数时，`useCallback(fn, inputs) <=> useMemo(() => fn, inputs)`。
+&emsp;&emsp; `useCallback(() => {}, [deps])` 返回一个函数，当 `deps` 不变时（如传入空数组，表示没有依赖），都是同一个函数。`const a = useMemo(() => memorizeValue, [deps])`，当 `deps` 不变时，`a` 的值还是上次的 `memorizeValue`，省去了重新计算的过程。
+&emsp;&emsp; 注意当 `memorizeValue` 是一个函数时，`useCallback(fn, inputs) <=> useMemo(() => fn, inputs)`。
 
 
 #### 2019/7/10
