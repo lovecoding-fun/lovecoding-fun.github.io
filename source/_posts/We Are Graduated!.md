@@ -4,9 +4,9 @@ catalog: true
 date: 2019-06-13 17:53:24
 subtitle:
 header-img:
-tags:
+tags: Daily
 ---
 
-We Are Graduated! :clap::tada:
+We Are Graduated! 
 
-Ready to move on! :muscle:
+Ready to move on! 
