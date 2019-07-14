@@ -12,7 +12,37 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 
 
 #### 2019/7/13
-预告：requestAnimationFrame
+一、今日阅读：[How to compare oldValues and newValues on React Hooks useEffect?](https://stackoverflow.com/questions/53446020/how-to-compare-oldvalues-and-newvalues-on-react-hooks-useeffect)
+&emsp;&emsp; React class 组件提供了 `ComponentDidUpdate` 之类的方法来获取到当前 `props` 和前一个 `props` ，并进行比较，决定是否进行更新。函数式组件只有 `useEffect` 函数来模仿生命周期函数，当我们需要获取组件先前的 `props` 时，可以使用下面的 `custom hook` ：
+```
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+```
+&emsp;&emsp;之后在 `useEffect` 中使用上面的函数来模拟 `ComponentDidUpdate` ：
+```
+const Component = (props) => {
+    const {receiveAmount, sendAmount } = props
+    const prevAmount = usePrevious({receiveAmount, sendAmount});
+    useEffect(() => {
+        if(prevAmount.receiveAmount !== receiveAmount) {
+
+         // process here
+        }
+        if(prevAmount.sendAmount !== sendAmount) {
+
+         // process here
+        }
+    }, [receiveAmount, sendAmount])
+}
+```
+&emsp;&emsp;有时候在 debug 时，我们想知道组件为什么会重新渲染，是那些 `props` 更新了，也可以使用上面的方法来获取 `prevProps`，并在函数组件最开始时写一个 `useEffect` 将参数都打印出来，使用 `===` 比较。 
+
+
 
 #### 2019/7/12
 一、今日技能

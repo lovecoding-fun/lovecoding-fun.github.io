@@ -90,7 +90,7 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 friends: [
     {
         title: "GengDavid",
-        href: "blog.leanote.com/geng"
+        href: "http://blog.leanote.com/geng"
     }
 ]
 
