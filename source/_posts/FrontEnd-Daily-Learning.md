@@ -11,6 +11,15 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/7/15
+&emsp;&emsp;今天在项目中使用 `React Hooks` 又踩坑了，看来自己对这部分还是没有理解透彻。在使用 `useCallback` 和 `useEffect` 时，要注意第二个参数，也就是传入的 `[deps]`。使用 `useCallback(fn,[deps])` 的情况下， `[deps]` 应该包含函数 `fn` 所涉及的所有变量；使用 `useEffect(fn,[deps])` 的情况下， 当 `deps` 的值变化时，就会执行 `fn`，因此`[deps]` 不一定要包含函数 `fn` 所涉及的所有变量，而是应该传入会引起该函数执行的那些参数。
+今日踩坑记录：为了优化子组件，作为 `props` 的函数都使用 `useCallback` 包裹了，并传入了空数组作为第二个参数，表示没有依赖。但是函数中的运算需要用到组件中一个变量，如果没有将该变量作为 `deps` ，这个变量就会一直保持初始值，值并不会改变，运行结果就会与预期不符。（真的太蠢了，缓缓躺倒）
+
+
+#### 2019/7/14
+周末当然是约会啦。😍
+
+
 #### 2019/7/13
 一、今日阅读：[How to compare oldValues and newValues on React Hooks useEffect?](https://stackoverflow.com/questions/53446020/how-to-compare-oldvalues-and-newvalues-on-react-hooks-useeffect)
 &emsp;&emsp; React class 组件提供了 `ComponentDidUpdate` 之类的方法来获取到当前 `props` 和前一个 `props` ，并进行比较，决定是否进行更新。函数式组件只有 `useEffect` 函数来模仿生命周期函数，当我们需要获取组件先前的 `props` 时，可以使用下面的 `custom hook` ：
