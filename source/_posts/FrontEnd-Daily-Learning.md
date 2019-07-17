@@ -11,9 +11,119 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/7/16
+一、今日阅读：[How to read an often-changing value from useCallback?](https://reactjs.org/docs/hooks-faq.html#how-to-read-an-often-changing-value-from-usecallback)
+直接上官网代码：
+```
+function Form() {
+  const [text, updateText] = useState('');
+  const textRef = useRef();
+
+  useEffect(() => {
+    textRef.current = text; // Write it to the ref
+  });
+
+  const handleSubmit = useCallback(() => {
+    const currentText = textRef.current; // Read it from the ref
+    alert(currentText);
+  }, [textRef]); // Don't recreate handleSubmit like [text] would do
+
+  return (
+    <>
+      <input value={text} onChange={e => updateText(e.target.value)} />
+      <ExpensiveTree onSubmit={handleSubmit} />
+    </>
+  );
+}
+```
+&emsp;&emsp; 也就是说，当 `text` 的值经常发生变化时，即使 `handleSubmit` 用 `useCallback` 包裹了，还是会重新声明。解决办法是传入一个 `ref` 对象代替原始值。也可以写一个 `custom hook` :
+1）官网的版本：
+```
+function useEventCallback(fn, dependencies) {
+  const ref = useRef(() => {
+    throw new Error('Cannot call an event handler while rendering.');
+  });
+
+  useEffect(() => {
+    ref.current = fn;
+  }, [fn, ...dependencies]);
+
+  return useCallback(() => {
+    const fn = ref.current;
+    return fn();
+  }, [ref]);
+}
+```
+实际使用：
+```
+function Form() {
+  const [text, updateText] = useState('');
+  // Will be memoized even if `text` changes:
+  const handleSubmit = useEventCallback(() => {
+    alert(text);
+  }, [text]);
+
+  return (
+    <>
+      <input value={text} onChange={e => updateText(e.target.value)} />
+      <ExpensiveTree onSubmit={handleSubmit} />
+    </>
+  );
+}
+```
+2）导师的版本：（他来了，他带着代码又来了）
+```
+/**
+ * @param callback
+ * @param oRefs
+ */
+export function useCallbackWithRefs<
+  Refs,
+  Callback extends (...args: any[]) => void
+>(callback: (refs: Refs) => Callback, oRefs: Refs) {
+  const refs = useRef(oRefs);
+  useEffect(
+    () => {
+      refs.current = oRefs;
+    },
+    [oRefs]
+  );
+
+  return useCallback(
+    (...args: any[]) => callback(refs.current)(...args),
+    []
+  ) as Callback;
+}
+```
+实际使用：
+```
+function Form() {
+  const [text, updateText] = useState('');
+  
+  // 原先的 callback 也可以有参数
+  const handleSubmit = useCallbackWithRefs(
+    refs => (params: any) => {
+      // 要注意在函数内必须使用 `refs.xxx`，不能直接使用函数外部的任何变量 `xxx`
+      console.log(refs.text);
+  }, {text});
+
+  return (
+    <>
+      <input value={text} onChange={e => updateText(e.target.value)} />
+      <ExpensiveTree onSubmit={handleSubmit} />
+    </>
+  );
+}
+```
+&emsp;&emsp;总的来说，官网的实现是将 `callback` 作为 `ref` 对象，并作为 `useCallback` 的依赖，不会频繁改变；如果在函数 `handleSubmit` 中要访问外部变量 `text` ，直接使用 `test` 即可。第二种实现方式是把经常变化的值作为 `ref` 对象，返回值 `useCallback` 第一个参数是 `refs => callback` ，依赖是空数组；这时如果要在函数 `handleSubmit` 中要访问外部变量 `text` ，必须使用 `refs.test` ，否则访问的只是 `test` 的初始值。
+&emsp;&emsp;React 博大精深，接下来要好好研读一下这个 [FAQ](https://reactjs.org/docs/hooks-faq.html)。
+二、今日网址
+&emsp;&emsp;一个 [emoji copy](https://www.emojicopy.com/) 网站，我们 👧 就是喜欢这些花里胡哨的东西。
+
+
 #### 2019/7/15
-&emsp;&emsp;今天在项目中使用 `React Hooks` 又踩坑了，看来自己对这部分还是没有理解透彻。在使用 `useCallback` 和 `useEffect` 时，要注意第二个参数，也就是传入的 `[deps]`。使用 `useCallback(fn,[deps])` 的情况下， `[deps]` 应该包含函数 `fn` 所涉及的所有变量；使用 `useEffect(fn,[deps])` 的情况下， 当 `deps` 的值变化时，就会执行 `fn`，因此`[deps]` 不一定要包含函数 `fn` 所涉及的所有变量，而是应该传入会引起该函数执行的那些参数。
-今日踩坑记录：为了优化子组件，作为 `props` 的函数都使用 `useCallback` 包裹了，并传入了空数组作为第二个参数，表示没有依赖。但是函数中的运算需要用到组件中一个变量，如果没有将该变量作为 `deps` ，这个变量就会一直保持初始值，值并不会改变，运行结果就会与预期不符。（真的太蠢了，缓缓躺倒）
+&emsp;&emsp;今天在项目中使用 `React Hooks` 又踩坑了，看来自己对这部分还是没有理解透彻。在使用 `useCallback` 和 `useEffect` 时，要注意第二个参数，也就是传入的 `[deps]`。如果使用 `useCallback(fn,[deps])` ， `[deps]` 应该包含函数 `fn` 所涉及的所有变量；如果使用 `useEffect(fn,[deps])` ， 当 `deps` 的值变化时，就会执行 `fn`，因此`[deps]` 不一定要包含函数 `fn` 所涉及的所有变量，而是应该传入会引起该函数执行的那些参数。
+&emsp;&emsp;今日踩坑记录：为了优化子组件，作为 `props` 的函数都使用 `useCallback` 包裹了，并传入了空数组作为第二个参数，表示没有依赖。但是函数中的运算需要用到组件中一个变量，如果没有将该变量作为 `deps` ，这个变量就会一直保持初始值，值并不会改变，运行结果就会与预期不符。（真的太蠢了，缓缓躺倒）
 
 
 #### 2019/7/14

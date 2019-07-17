@@ -7,6 +7,6 @@ header-img:
 tags: Daily
 ---
 
-We Are Graduated! 
+We Are Graduated ! 🎓
 
-Ready to move on! 
+Ready to move on ! 💪
