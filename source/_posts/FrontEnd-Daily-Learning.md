@@ -11,6 +11,33 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/7/17
+&emsp;&emsp;如果我们在项目中需要请求很多图片，想要实现请求出错时继续发送请求，成功时返回数据，可以使用 `Promise` ：
+```
+function fetchURL(url: string):Promise<Blob> {
+  return Axios.get(url, {responeType: "blob"})
+              .then( resp => Promise.resolve(resp.data) )
+              .catch( () => fetchURL(url) )
+}
+```
+之后可以使用 `rxjs` ：
+```
+import { mergeMap, bufferTime, takeUntil } from "rxjs/operators";
+
+[url1,...,url10]
+  .pipe(
+    mergeMap( url => fetchURL(url).then( val => val )),
+    bufferTime(10000)
+  )
+  .subscribe({
+    next: resps => {
+      // do sth with resps:Blob[]
+    }
+  })
+```
+&emsp;&emsp;每次遇到 `rxjs` 都很头大，现在也没有发现一个比较完善清晰的教程，但它又真的很强大，后续要开专题好好学习记录这个东西。
+
+
 #### 2019/7/16
 一、今日阅读：[How to read an often-changing value from useCallback?](https://reactjs.org/docs/hooks-faq.html#how-to-read-an-often-changing-value-from-usecallback)
 直接上官网代码：
