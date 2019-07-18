@@ -11,6 +11,55 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/7/18
+一、编程模式：
+&emsp;&emsp; 首先先记住这几种编程模式的中文：Imperative Programming 是命令式编程，Declarative Programming 是声明式编程，Reactive Programming 是响应式编程。（流下了英文不好的泪水）
+1）先看命令式编程和声明式编程的区别，直接上代码：
+```
+// 命令式编程 imperative programming
+const array = [0,1,2,3,4,5];
+const output = [];
+for (let i = 0; i < array.length; i++) {
+  const tmp = array[i] * 2;
+  output.push(tmp)
+};
+console.log(output) // => [0,2,4,6,8,10]
+```
+```
+// 声明式编程 declarative programming
+const array = [0,1,2,3,4,5];
+const output = array.map(item => item * 2);
+console.log(output) // => [0,2,3,6,8,10]
+```
+&emsp;&emsp;很明显可以看到，命令式编程的关注点在于 how ，我们需要一步步告诉机器接下来要做什么，告诉他怎么去遍历一个数组，怎么去运算得到最后的结果，怎么去输出；声明式编程的关注点在于 what ，我们只关注最后的结果，由机器自己去摸索过程，如直接调用 `map` 函数，只告诉程序我们需要一个2倍输出。
+2）接着看声明式编程和响应式编程的对比
+&emsp;&emsp;可以阅读：[Imperative vs Reactive](https://codepen.io/HunorMarton/post/imperative-vs-reactive)，解释很清晰，比喻也很形象，但我觉得文章里的 `Imperative` 应该改成 `declarative` 比较准确。继续沿用上面的例子，修改一下声明式编程的例子：
+```
+// 声明式编程 declarative programming
+const array = [1,2];
+const output = array.map(item => item * 2);
+output.forEach(item => console.log(item)) // => 2 4
+array.push(3);  // => no output 
+array.push(4);  // => no output
+```
+响应式编程的例子：
+```
+import { Subject } from `rxjs`;
+let array = new Subject();
+array.next(1);
+array.next(2);
+
+const output = array.map(item => item * 2);
+output.forEach(item => console.log(item)); // => 2 4
+
+array.next(3); // => 6
+array.next(4); // => 8
+```
+&emsp;&emsp;首先要注意的是，这两种方式中的 `map` ， `forEach` 等函数并不是一样的，内部实现机制是不同的。我们可以发现区别：在声明式编程中，如果我在最后向原数组添加值，并不会打印出来，因为这是在 `console.log` 语句执行后发生的。但在响应式编程里，任何变化都可以被反应出来，它引入了一个**异步数据流**（asynchronous data streams）的概念，可以随时创建、更改或组合这些数据流，所以打印事件是一个 continuous observation case。
+二、类库
+[react-virtualized](https://github.com/bvaughn/react-virtualized) 的轻量级版 [react-window](https://github.com/bvaughn/react-window)，用于高效渲染长列表
+
+
 #### 2019/7/17
 &emsp;&emsp;如果我们在项目中需要请求很多图片，想要实现请求出错时继续发送请求，成功时返回数据，可以使用 `Promise` ：
 ```
@@ -63,7 +112,7 @@ function Form() {
   );
 }
 ```
-&emsp;&emsp; 也就是说，当 `text` 的值经常发生变化时，即使 `handleSubmit` 用 `useCallback` 包裹了，还是会重新声明。解决办法是传入一个 `ref` 对象代替原始值。也可以写一个 `custom hook` :
+&emsp;&emsp; 也就是说，当 `text` 的值经常发生变化时，即使 `handleSubmit` 用 `useCallback` 包裹了，还是会重新声明。解决办法是传入一个 `ref` 对象代替原始值。也可以写一个 custom hook ：
 1）官网的版本：
 ```
 function useEventCallback(fn, dependencies) {
@@ -149,7 +198,7 @@ function Form() {
 
 
 #### 2019/7/15
-&emsp;&emsp;今天在项目中使用 `React Hooks` 又踩坑了，看来自己对这部分还是没有理解透彻。在使用 `useCallback` 和 `useEffect` 时，要注意第二个参数，也就是传入的 `[deps]`。如果使用 `useCallback(fn,[deps])` ， `[deps]` 应该包含函数 `fn` 所涉及的所有变量；如果使用 `useEffect(fn,[deps])` ， 当 `deps` 的值变化时，就会执行 `fn`，因此`[deps]` 不一定要包含函数 `fn` 所涉及的所有变量，而是应该传入会引起该函数执行的那些参数。
+&emsp;&emsp;今天在项目中使用 React Hooks 又踩坑了，看来自己对这部分还是没有理解透彻。在使用 `useCallback` 和 `useEffect` 时，要注意第二个参数，也就是传入的 `[deps]`。如果使用 `useCallback(fn,[deps])` ， `[deps]` 应该包含函数 `fn` 所涉及的所有变量；如果使用 `useEffect(fn,[deps])` ， 当 `deps` 的值变化时，就会执行 `fn`，因此`[deps]` 不一定要包含函数 `fn` 所涉及的所有变量，而是应该传入会引起该函数执行的那些参数。
 &emsp;&emsp;今日踩坑记录：为了优化子组件，作为 `props` 的函数都使用 `useCallback` 包裹了，并传入了空数组作为第二个参数，表示没有依赖。但是函数中的运算需要用到组件中一个变量，如果没有将该变量作为 `deps` ，这个变量就会一直保持初始值，值并不会改变，运行结果就会与预期不符。（真的太蠢了，缓缓躺倒）
 
 
@@ -159,7 +208,7 @@ function Form() {
 
 #### 2019/7/13
 一、今日阅读：[How to compare oldValues and newValues on React Hooks useEffect?](https://stackoverflow.com/questions/53446020/how-to-compare-oldvalues-and-newvalues-on-react-hooks-useeffect)
-&emsp;&emsp; React class 组件提供了 `ComponentDidUpdate` 之类的方法来获取到当前 `props` 和前一个 `props` ，并进行比较，决定是否进行更新。函数式组件只有 `useEffect` 函数来模仿生命周期函数，当我们需要获取组件先前的 `props` 时，可以使用下面的 `custom hook` ：
+&emsp;&emsp; React class 组件提供了 `ComponentDidUpdate` 之类的方法来获取到当前 `props` 和前一个 `props` ，并进行比较，决定是否进行更新。函数式组件只有 `useEffect` 函数来模仿生命周期函数，当我们需要获取组件先前的 `props` 时，可以使用下面的 custom hook ：
 ```
 function usePrevious(value) {
   const ref = useRef();
@@ -217,7 +266,7 @@ function safeJsonParse<T>(str): { ok: true, value: T } | { ok: false } {
 - GPU进程：3D绘制
 
 3）重点是浏览器内核，它是多线程的，主要常驻线程有：
-- GUI渲染线程：渲染页面，解析HTML，CSS，构建DOM树和RenderObject树，布局和绘制，`repaint` 和 `reflow` 等。
+- GUI渲染线程：渲染页面，解析HTML，CSS，构建DOM树和RenderObject树，布局和绘制，repaint 和 reflow 等。
 - JS引擎线程：处理任务队列中的任务，与 GUI 渲染线程是互斥的。
 - 事件触发线程：控制事件循环，把事件添加到任务队列的末尾。
 - 定时触发线程：`setTimeout` 和 `setInterval`，同样也是计时完毕后添加到队列末尾。
@@ -225,9 +274,9 @@ function safeJsonParse<T>(str): { ok: true, value: T } | { ok: false } {
 
 4）Browser进程和浏览器内核之间是需要通信的
 5）时间循环机制 `Event Loop` ：JS分为同步任务和异步任务，同步任务都会在主线程上运行，形成一个执行栈；主线程之外，由事件触发线程管理一个**任务队列/事件队列**，异步任务的运行结果会被添加到任务队列中。一旦执行栈中所有同步任务执行完毕，系统就会读取任务队列，将可运行的异步任务添加到执行栈中开始执行。 
-6）进阶：`macrotask` / `task` 和 `microtask`/ `job`。ES6中的 `Promise` 就属于 `microtask`微任务 ，而主代码块，事件队列中的时间如 `setTimeout` 和 `setInterval` 就属于 `macrotask` 宏任务。总结的运行机制就是：
+6）进阶：macrotask / task 和 microtask/ job。ES6中的 `Promise` 就属于 microtask 微任务 ，而主代码块，事件队列中的时间如 `setTimeout` 和 `setInterval` 就属于 macrotask 宏任务。总结的运行机制就是：
 - 执行宏任务。（从执行栈中获取，如果没有就从事件队列中获取）
-- 执行过程中如果遇到微任务，就添加到微任务队列 `Job Queues` 中。（作者猜测这个队列由JS引擎线程维护，因为是在主线程下无缝执行的）
+- 执行过程中如果遇到微任务，就添加到微任务队列 Job Queues 中。（作者猜测这个队列由JS引擎线程维护，因为是在主线程下无缝执行的）
 - 宏任务执行完毕后，立即依次执行当前微任务队列中所有微任务。
 - 检查渲染，由 GUI 线程接管。
 - 渲染完毕后，由 JS 引擎线程接管，从时间队列中获取并执行下一个宏任务。
