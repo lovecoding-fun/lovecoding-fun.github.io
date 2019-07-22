@@ -221,3 +221,11 @@ deploy:
   repository: git@lovecoding.github.com:lovecoding-fun/lovecoding-fun.github.io.git
   branch: master
   message: re-build
+
+math:
+  enable: true
+  # Default(true) will load mathjax/katex script on demand
+  # That is it only render those page who has 'mathjax: true' in Front Matter.
+  # If you set it to false, it will load mathjax/katex srcipt EVERY PAGE.
+  per_page: false
+  engine: mathjax
