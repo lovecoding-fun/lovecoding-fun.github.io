@@ -11,7 +11,38 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
-#### 2019/7/18
+#### 2019/7/26
+应用场景：我们需要请求并更新菜单栏中任务的状态，如果一个请求完成立马更新会导致 React 频繁刷新，需要缓冲批处理：
+```
+import { runInAction } from "mobx";
+
+let handlers: Array<() => void> = [];
+const runHandlers = () => {
+  runInAction(() => {
+    handlers.forEach(f => f());
+    handlers = [];
+  });
+};
+
+for (const task of tasks) {
+  const {data} = await requestFn();
+  
+  handlers.push(() => {
+    // deal with data, update state
+    ...
+  });
+
+  if(handlers.length > 30) {
+    runHandlers();
+  }
+}
+
+runHandlers();
+```
+上述代码主要是利用了自定义的 `handlers` 来暂存状态更新函数，之后使用 mobx 提供的 `runInAction` 执行函数并更新状态，更新状态都需要使用 `action` 函数， `runInAction` 接受一个代码块并在一个(匿名)操作中执行，有利于动态创建和执行操作，`runInAction(f) = action(f)()`。此外，必要时还可加上 `lodash.memoize(func,[resolver])`，记录主函数请求结果。
+
+
+#### 2019/7/18 
 一、编程模式：
 &emsp;&emsp; 首先先记住这几种编程模式的中文：Imperative Programming 是命令式编程，Declarative Programming 是声明式编程，Reactive Programming 是响应式编程。（流下了英文不好的泪水）
 1）先看命令式编程和声明式编程的区别，直接上代码：
@@ -33,7 +64,7 @@ console.log(output) // => [0,2,3,6,8,10]
 ```
 &emsp;&emsp;很明显可以看到，命令式编程的关注点在于 how ，我们需要一步步告诉机器接下来要做什么，告诉他怎么去遍历一个数组，怎么去运算得到最后的结果，怎么去输出；声明式编程的关注点在于 what ，我们只关注最后的结果，由机器自己去摸索过程，如直接调用 `map` 函数，只告诉程序我们需要一个2倍输出。
 2）接着看声明式编程和响应式编程的对比
-&emsp;&emsp;可以阅读：[Imperative vs Reactive](https://codepen.io/HunorMarton/post/imperative-vs-reactive)，解释很清晰，比喻也很形象，但我觉得文章里的 `Imperative` 应该改成 `declarative` 比较准确。继续沿用上面的例子，修改一下声明式编程的例子：
+&emsp;&emsp;可以阅读：[Imperative vs Reactive](https://codepen.io/HunorMarton/post/imperative-vs-reactive)，解释很清晰，比喻也很形象，但我觉得文章里的 Imperative 应该改成 Declarative 比较准确。继续沿用上面的例子，修改一下声明式编程的例子：
 ```
 // 声明式编程 declarative programming
 const array = [1,2];
@@ -55,12 +86,12 @@ output.forEach(item => console.log(item)); // => 2 4
 array.next(3); // => 6
 array.next(4); // => 8
 ```
-&emsp;&emsp;首先要注意的是，这两种方式中的 `map` ， `forEach` 等函数并不是一样的，内部实现机制是不同的。我们可以发现区别：在声明式编程中，如果我在最后向原数组添加值，并不会打印出来，因为这是在 `console.log` 语句执行后发生的。但在响应式编程里，任何变化都可以被反应出来，它引入了一个**异步数据流**（asynchronous data streams）的概念，可以随时创建、更改或组合这些数据流，所以打印事件是一个 continuous observation case。
+&emsp;&emsp;首先要注意的是，这两种方式中的 `map` ， `forEach` 等函数并不是一样的，内部实现机制是不同的。我们可以发现区别：在声明式编程中，如果在最后向原数组添加值，并不会打印出来，因为这是在 `console.log` 语句执行后发生的。但在响应式编程里，任何变化都可以被反应出来，它引入了一个**异步数据流**（asynchronous data streams）的概念，可以随时创建、更改或组合这些数据流，所以打印事件是一个 continuous observation case。
 二、类库
-[react-virtualized](https://github.com/bvaughn/react-virtualized) 的轻量级版 [react-window](https://github.com/bvaughn/react-window)，用于高效渲染长列表
+[react-virtualized](https://github.com/bvaughn/react-virtualized) 的轻量级版 [react-window](https://github.com/bvaughn/react-window)，用于高效渲染长列表。
 
 
-#### 2019/7/17
+#### 2019/7/17 
 &emsp;&emsp;如果我们在项目中需要请求很多图片，想要实现请求出错时继续发送请求，成功时返回数据，可以使用 `Promise` ：
 ```
 function fetchURL(url: string):Promise<Blob> {
