@@ -11,6 +11,37 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/7/29
+一、[performance.now() vs Date.now()](https://stackoverflow.com/questions/30795525/performance-now-vs-date-now)
+在程序中打印执行时间时，使用 `performance.now(）` 更准确。
+```
+const start = performance.now();
+doSomething();
+const end = performance.now();
+console.log("Call to doSomething took " + (start - end) + " milliseconds.");
+```
+二、[Does javascript slice method return a shallow copy](https://stackoverflow.com/questions/47738344/does-javascript-slice-method-return-a-shallow-copy)
+mdn 上对 `slice()` 方法的介绍：
+>The slice() method returns a shallow copy of a portion of an array into a new array object selected from begin to end (end not included) where begin and end represent the index of items in that array. The original array will not be modified.
+注意这里的浅复制指的是对数组中值的浅复制，而不是对整个数组的浅复制。如果是一个字符串数组，则修改新数组时，原数组不会改变；如果是对象数组，修改新数组对象值时，原数组也会发生变化。
+```
+const animals = [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}, {name: 'duck'}, {name: 'elephant'}];
+const newAnimals = animals.slice(2,4);
+
+newAnimals[0].name = 'aaa';
+console.log(newAnimals); // [{name: 'aaa'}, {name: 'duck'}]
+console.log(animals);    // [{name: 'ant'}, {name: 'bison'}, {name: 'aaa'}, {name: 'duck'}, {name: 'elephant'}]
+```
+注意如果是重新赋值，则等于重新分配空间，不会改变原数组。
+```
+const animals = [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}, {name: 'duck'}, {name: 'elephant'}];
+const newAnimals = animals.slice(2,4);
+
+newAnimals[0] = {name: 'aaa'};
+console.log(newAnimals); // [{name: 'aaa'}, {name: 'duck'}]
+console.log(animals);    // [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}, {name: 'duck'}, {name: 'elephant'}]
+```
+
 #### 2019/7/26
 应用场景：我们需要请求并更新菜单栏中任务的状态，如果一个请求完成立马更新会导致 React 频繁刷新，需要缓冲批处理：
 ```
@@ -40,6 +71,7 @@ for (const task of tasks) {
 runHandlers();
 ```
 上述代码主要是利用了自定义的 `handlers` 来暂存状态更新函数，之后使用 mobx 提供的 `runInAction` 执行函数并更新状态，更新状态都需要使用 `action` 函数， `runInAction` 接受一个代码块并在一个(匿名)操作中执行，有利于动态创建和执行操作，`runInAction(f) = action(f)()`。此外，必要时还可加上 `lodash.memoize(func,[resolver])`，记录主函数请求结果。
+> For one-time-actions runInAction(name?, fn) can be used, which is sugar for action(name, fn)()
 
 
 #### 2019/7/18 
