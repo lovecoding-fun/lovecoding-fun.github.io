@@ -11,6 +11,57 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/7/31
+`position: fixed` 和 `flex` 布局是不能同时起作用的。绝对布局脱离文档流，不会参与到 `flex layout` 中。如果想实现左侧菜单栏，右侧内容，两者不同时滚动（菜单栏 fixed），但菜单栏的大小可以改变（flex 父布局）。可以让父容器是 flex 布局，左侧菜单栏和右侧内容区域都是 `flex element` ， 菜单栏内部再有一个 `position: fixed` 的 `div` 。
+
+
+#### 2019/7/30
+`useEffect` 中的异步请求：
+```
+// 错误写法， return 必须是 cleanup function
+useEffect(async () => {
+  const newVal = await asyncCall();
+  setVal(newVal);
+});
+
+// 正确写法
+useEffect(() => {
+  asyncCall().then(resp => setVal(resp.data));
+});
+```
+好文共享：[How to fetch data with React Hooks?](https://www.robinwieruch.de/react-hooks-fetch-data/)，代码如下：
+```
+useEffect(() => {
+  async function fetchMyAPI() {
+    let url = 'http://something/' + productId;
+    let config = {};
+    const response = await myFetch(url);
+    console.log(response);
+  }  
+
+  fetchMyAPI();
+}, [productId]);
+```
+如果要保证请求按顺序发出，可以采用如下写法：
+```
+useEffect(() => {
+  let didCancel = false;
+
+  async function fetchMyAPI() {
+    let url = 'http://something/' + productId;
+    let config = {};
+    const response = await myFetch(url);
+    if (!didCancel) { // Ignore if we started fetching something else
+      console.log(response);
+    } 
+  }  
+
+  fetchMyAPI();
+  return () => { didCancel = true; }; // Remember if we start fetching something else
+}, [productId]);
+```
+
+
 #### 2019/7/29
 一、[performance.now() vs Date.now()](https://stackoverflow.com/questions/30795525/performance-now-vs-date-now)
 在程序中打印执行时间时，使用 `performance.now(）` 更准确。
@@ -20,26 +71,27 @@ doSomething();
 const end = performance.now();
 console.log("Call to doSomething took " + (start - end) + " milliseconds.");
 ```
-二、[Does javascript slice method return a shallow copy](https://stackoverflow.com/questions/47738344/does-javascript-slice-method-return-a-shallow-copy)
+二、[Does javascript slice method return a shallow copy?](https://stackoverflow.com/questions/47738344/does-javascript-slice-method-return-a-shallow-copy)
 mdn 上对 `slice()` 方法的介绍：
 >The slice() method returns a shallow copy of a portion of an array into a new array object selected from begin to end (end not included) where begin and end represent the index of items in that array. The original array will not be modified.
+
 注意这里的浅复制指的是对数组中值的浅复制，而不是对整个数组的浅复制。如果是一个字符串数组，则修改新数组时，原数组不会改变；如果是对象数组，修改新数组对象值时，原数组也会发生变化。
 ```
-const animals = [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}, {name: 'duck'}, {name: 'elephant'}];
-const newAnimals = animals.slice(2,4);
+const animals = [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}];
+const newAnimals = animals.slice(2);
 
 newAnimals[0].name = 'aaa';
-console.log(newAnimals); // [{name: 'aaa'}, {name: 'duck'}]
-console.log(animals);    // [{name: 'ant'}, {name: 'bison'}, {name: 'aaa'}, {name: 'duck'}, {name: 'elephant'}]
+console.log(newAnimals); // [{name: 'aaa'}]
+console.log(animals);    // [{name: 'ant'}, {name: 'bison'}, {name: 'aaa'}]
 ```
 注意如果是重新赋值，则等于重新分配空间，不会改变原数组。
 ```
-const animals = [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}, {name: 'duck'}, {name: 'elephant'}];
-const newAnimals = animals.slice(2,4);
+const animals = [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}];
+const newAnimals = animals.slice(2);
 
 newAnimals[0] = {name: 'aaa'};
-console.log(newAnimals); // [{name: 'aaa'}, {name: 'duck'}]
-console.log(animals);    // [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}, {name: 'duck'}, {name: 'elephant'}]
+console.log(newAnimals); // [{name: 'aaa'}]
+console.log(animals);    // [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}]
 ```
 
 #### 2019/7/26
