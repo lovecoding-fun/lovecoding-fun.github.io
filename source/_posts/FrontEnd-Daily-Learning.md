@@ -11,8 +11,68 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/8/1
+一、[Fetch API](https://javascript.info/fetch-api)
+1）用 fetch 来请求网络资源，可以配置不同的参数来解决缓存、跨域等问题，如下示例代码：
+```
+// 不缓存请求结果 
+// https://stackoverflow.com/questions/29246444/fetch-how-do-you-make-a-non-cached-request
+const headers = new Headers();
+headers.append("pragma", "no-cache");
+headers.append("cache-control", "no-store");
+
+// 完全忽略 http-cache ，每次都从服务器请求数据
+// https://developer.mozilla.org/en-US/docs/Web/API/Request/cache
+const cache: RequestCache = "no-store";
+
+// 请求模式，若有的请求会因为 cors 而失败，可以设置为 "no-cors"
+// https://developer.mozilla.org/en-US/docs/Web/API/Request/mode
+const mode: RequestMode = needCors ? "cors" : "no-cors";
+
+await fetch(url. {headers, cache, mode})
+  .then(res => res.blob())
+  .then(blob => {
+    // doSomething with blob
+    const url = URL.createObjectURL(blob)
+    let a = document.createElement('a')
+    a.download = 'example.zip'
+    a.href = url
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  .finally(() => {
+    // doSomething
+  })
+```
+关于 `res.blob()` ，可以参考知乎上[谈一谈 Fetch API 中的 “res.blob()”](https://zhuanlan.zhihu.com/p/32909043)；也可以参考 [fetch documentation](https://github.github.io/fetch/) ，这一篇比较详细，也提供了较多其他的例子。关于浏览器缓存问题，Medium 上这篇 [A Web Developer’s Guide to Browser Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 写得不错。
+二、Jest
+我们在使用 jest 测试时，有时候需要引入一些外部文件/外部变量，如从 `config.json` 文件中引入某个变量。为了在测试文件中可以访问到该变量，我们可以在 `jest.config.js` 中配置全局变量：
+```
+module.exports = {
+  globals: {
+    API_BASE: "",
+    DATA_API: "",
+    TRACK_API: ""
+  },
+  setupFiles: ["./jestSetup.ts"]
+}
+```
+由于 `globals` 只支持 JSON 格式的变量，如果我们需要定义全局函数，则可以使用 `setupFiles`。
+```
+// jestSetup.ts
+(global as any).fn= () => {};
+(global as any).variable = "XXX";
+```
+
+
 #### 2019/7/31
-`position: fixed` 和 `flex` 布局是不能同时起作用的。绝对布局脱离文档流，不会参与到 `flex layout` 中。如果想实现左侧菜单栏，右侧内容，两者不同时滚动（菜单栏 fixed），但菜单栏的大小可以改变（flex 父布局）。可以让父容器是 flex 布局，左侧菜单栏和右侧内容区域都是 `flex element` ， 菜单栏内部再有一个 `position: fixed` 的 `div` 。
+1）`position: fixed` 和 flex 布局是不能同时起作用的。绝对布局脱离文档流，不会参与到 flex layout 中。如果想实现左侧菜单栏，右侧内容，两者不同时滚动（菜单栏 fixed），但菜单栏的大小可以改变（flex 父布局）。可以让父容器是 flex 布局，左侧菜单栏和右侧内容区域都是 flex element ， 菜单栏内部再有一个 `position: fixed` 的 div 。
+2）如果想让 `position: fixed` 的元素相对父容器定位，可以给父容器增加 CSS 属性 `transform: translate(0,0)` 。参考：[MDN - position](https://developer.mozilla.org/en-US/docs/Web/CSS/position)
+> fixed: It is positioned relative to the initial containing block established by the viewport, except when one of its ancestors has a transform, perspective, or filter property set to something other than none. 
 
 
 #### 2019/7/30
