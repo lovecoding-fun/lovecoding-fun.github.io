@@ -11,6 +11,59 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/8/8
+工程中经常会看到 CI/CD 的概念。CI 指的是持续集成，侧重于简化发布准备工作的实践，比如自动测试；CD 指的是持续交付，意味着不仅让测试自动化，让发布流程也自动化了。更多概念对比可以参考：
+[Continuous integration vs. continuous delivery vs. continuous deployment](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment)
+下面这个图很清晰地描述了三者的不同：
+![FE_20190808](FE_20190808.png)
+在 gitlab 上的实践可以参考：[基于 GitLab CI/CD 的自动化构建、发布实践](https://mp.weixin.qq.com/s/z2f1i2FgrVGofQR6nKTd1A)
+
+#### 2019/8/7
+Typescript: [Discriminated Unions](https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions) 
+当我们某个参数可能有多个类型，而这些类型中又有公共的属性时，就可以使用这种形式约束。
+```
+// Each interface has a kind property with a different string literal type. 
+// The kind property is called the discriminant or tag. 
+interface Square {
+    kind: "square";
+    size: number;
+}
+interface Rectangle {
+    kind: "rectangle";
+    width: number;
+    height: number;
+}
+interface Circle {
+    kind: "circle";
+    radius: number;
+}
+
+// put the interfaces into a union
+type Shape = Square | Rectangle | Circle;
+
+// use the discriminated union
+function area(s: Shape) {
+    switch (s.kind) {
+        case "square": return s.size * s.size;
+        case "rectangle": return s.height * s.width;
+        case "circle": return Math.PI * s.radius ** 2;
+        default: return assertNever(s); // error here if there are missing cases
+    }
+}
+
+// Exhaustiveness checking 
+function assertNever(x: never): never {
+    throw new Error("Unexpected object: " + x);
+}
+```
+
+
+#### 2019/8/6
+Stack Overflow: [useState set method not reflecting change immediately.](https://stackoverflow.com/questions/54069253/usestate-set-method-not-reflecting-change-immediately)
+今天在实践中发现，`setState` 后马上打印，并不会取到更新后的值。查阅资料后发现这个函数是一个异步的函数，不会立即更新，但会触发重新渲染。如下：
+![FE_20190806](FE_20190806.png)
+
+
 #### 2019/8/1
 一、[Fetch API](https://javascript.info/fetch-api)
 1）用 fetch 来请求网络资源，可以配置不同的参数来解决缓存、跨域等问题，如下示例代码：
@@ -48,7 +101,8 @@ await fetch(url. {headers, cache, mode})
     // doSomething
   })
 ```
-关于 `res.blob()` ，可以参考知乎上[谈一谈 Fetch API 中的 “res.blob()”](https://zhuanlan.zhihu.com/p/32909043)；也可以参考 [fetch documentation](https://github.github.io/fetch/) ，这一篇比较详细，也提供了较多其他的例子。关于浏览器缓存问题，Medium 上这篇 [A Web Developer’s Guide to Browser Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 写得不错。
+关于 `res.blob()` ，可以参考知乎上[谈一谈 Fetch API 中的 “res.blob()”](https://zhuanlan.zhihu.com/p/32909043)；也可以参考 [fetch documentation](https://github.github.io/fetch/) ，这一篇比较详细，也提供了较多其他的例子。
+关于浏览器缓存问题，Medium 上这篇 [A Web Developer’s Guide to Browser Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 写得不错。如果存在代理服务器，即使我们设置了 `mode: 'no-store'` ，代理服务器也会缓存。为了避免这个情况，我们可以在每次发送请求时构造新的 URL ，加上时间戳 `?t=Date.now()` 。🐮🍺
 二、Jest
 我们在使用 jest 测试时，有时候需要引入一些外部文件/外部变量，如从 `config.json` 文件中引入某个变量。为了在测试文件中可以访问到该变量，我们可以在 `jest.config.js` 中配置全局变量：
 ```
