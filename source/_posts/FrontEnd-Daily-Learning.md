@@ -12,15 +12,14 @@ recap and cheat sheet ，记录每天学到的知识/想法。
 
 
 #### 2019/8/8
-工程中经常会看到 CI/CD 的概念。CI 指的是持续集成，侧重于简化发布准备工作的实践，比如自动测试；CD 指的是持续交付，意味着不仅让测试自动化，让发布流程也自动化了。更多概念对比可以参考：
-[Continuous integration vs. continuous delivery vs. continuous deployment](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment)
-下面这个图很清晰地描述了三者的不同：
+&emsp;&emsp;工程中经常会看到 CI/CD 的概念。CI 指的是持续集成，侧重于简化发布准备工作的实践，比如自动测试；CD 指的是持续交付，意味着不仅让测试自动化，让发布流程也自动化了。更多概念对比可以参考：[Continuous integration vs. continuous delivery vs. continuous deployment](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment)
+&emsp;&emsp;下面这个图很清晰地描述了三者的不同：
 ![FE_20190808](FE_20190808.png)
-在 gitlab 上的实践可以参考：[基于 GitLab CI/CD 的自动化构建、发布实践](https://mp.weixin.qq.com/s/z2f1i2FgrVGofQR6nKTd1A)
+&emsp;&emsp;在 gitlab 上的实践可以参考：[基于 GitLab CI/CD 的自动化构建、发布实践](https://mp.weixin.qq.com/s/z2f1i2FgrVGofQR6nKTd1A)
 
 #### 2019/8/7
 Typescript: [Discriminated Unions](https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions) 
-当我们某个参数可能有多个类型，而这些类型中又有公共的属性时，就可以使用这种形式约束。
+&emsp;&emsp;当我们某个参数可能有多个类型，而这些类型中又有公共的属性时，就可以使用这种形式约束。
 ```
 // Each interface has a kind property with a different string literal type. 
 // The kind property is called the discriminant or tag. 
@@ -60,13 +59,13 @@ function assertNever(x: never): never {
 
 #### 2019/8/6
 Stack Overflow: [useState set method not reflecting change immediately.](https://stackoverflow.com/questions/54069253/usestate-set-method-not-reflecting-change-immediately)
-今天在实践中发现，`setState` 后马上打印，并不会取到更新后的值。查阅资料后发现这个函数是一个异步的函数，不会立即更新，但会触发重新渲染。如下：
+&emsp;&emsp;今天在实践中发现，`setState` 后马上打印，并不会取到更新后的值。查阅资料后发现这个函数是一个异步的函数，不会立即更新，但会触发重新渲染。如下：
 ![FE_20190806](FE_20190806.png)
 
 
 #### 2019/8/1
 一、[Fetch API](https://javascript.info/fetch-api)
-1）用 fetch 来请求网络资源，可以配置不同的参数来解决缓存、跨域等问题，如下示例代码：
+&emsp;&emsp;用 fetch 来请求网络资源，可以配置不同的参数来解决缓存、跨域等问题，如下示例代码：
 ```
 // 不缓存请求结果 
 // https://stackoverflow.com/questions/29246444/fetch-how-do-you-make-a-non-cached-request
@@ -101,10 +100,10 @@ await fetch(url. {headers, cache, mode})
     // doSomething
   })
 ```
-关于 `res.blob()` ，可以参考知乎上[谈一谈 Fetch API 中的 “res.blob()”](https://zhuanlan.zhihu.com/p/32909043)；也可以参考 [fetch documentation](https://github.github.io/fetch/) ，这一篇比较详细，也提供了较多其他的例子。
+&emsp;&emsp;关于 `res.blob()` ，可以参考知乎上[谈一谈 Fetch API 中的 “res.blob()”](https://zhuanlan.zhihu.com/p/32909043)；也可以参考 [fetch documentation](https://github.github.io/fetch/) ，这一篇比较详细，也提供了较多其他的例子。
 关于浏览器缓存问题，Medium 上这篇 [A Web Developer’s Guide to Browser Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 写得不错。如果存在代理服务器，即使我们设置了 `mode: 'no-store'` ，代理服务器也会缓存。为了避免这个情况，我们可以在每次发送请求时构造新的 URL ，加上时间戳 `?t=Date.now()` 。🐮🍺
 二、Jest
-我们在使用 jest 测试时，有时候需要引入一些外部文件/外部变量，如从 `config.json` 文件中引入某个变量。为了在测试文件中可以访问到该变量，我们可以在 `jest.config.js` 中配置全局变量：
+&emsp;&emsp;我们在使用 jest 测试时，有时候需要引入一些外部文件/外部变量，如从 `config.json` 文件中引入某个变量。为了在测试文件中可以访问到该变量，我们可以在 `jest.config.js` 中配置全局变量：
 ```
 module.exports = {
   globals: {
@@ -115,7 +114,7 @@ module.exports = {
   setupFiles: ["./jestSetup.ts"]
 }
 ```
-由于 `globals` 只支持 JSON 格式的变量，如果我们需要定义全局函数，则可以使用 `setupFiles`。
+&emsp;&emsp;由于 `globals` 只支持 JSON 格式的变量，如果我们需要定义全局函数，则可以使用 `setupFiles`。
 ```
 // jestSetup.ts
 (global as any).fn= () => {};
@@ -178,7 +177,7 @@ useEffect(() => {
 
 #### 2019/7/29
 一、[performance.now() vs Date.now()](https://stackoverflow.com/questions/30795525/performance-now-vs-date-now)
-在程序中打印执行时间时，使用 `performance.now(）` 更准确。
+&emsp;&emsp;在程序中打印执行时间时，使用 `performance.now(）` 更准确。
 ```
 const start = performance.now();
 doSomething();
@@ -186,10 +185,10 @@ const end = performance.now();
 console.log("Call to doSomething took " + (start - end) + " milliseconds.");
 ```
 二、[Does javascript slice method return a shallow copy?](https://stackoverflow.com/questions/47738344/does-javascript-slice-method-return-a-shallow-copy)
-mdn 上对 `slice()` 方法的介绍：
+&emsp;&emsp;mdn 上对 `slice()` 方法的介绍：
 >The slice() method returns a shallow copy of a portion of an array into a new array object selected from begin to end (end not included) where begin and end represent the index of items in that array. The original array will not be modified.
 
-注意这里的浅复制指的是对数组中值的浅复制，而不是对整个数组的浅复制。如果是一个字符串数组，则修改新数组时，原数组不会改变；如果是对象数组，修改新数组对象值时，原数组也会发生变化。
+&emsp;&emsp;注意这里的浅复制指的是对数组中值的浅复制，而不是对整个数组的浅复制。如果是一个字符串数组，则修改新数组时，原数组不会改变；如果是对象数组，修改新数组对象值时，原数组也会发生变化。
 ```
 const animals = [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}];
 const newAnimals = animals.slice(2);
@@ -198,7 +197,7 @@ newAnimals[0].name = 'aaa';
 console.log(newAnimals); // [{name: 'aaa'}]
 console.log(animals);    // [{name: 'ant'}, {name: 'bison'}, {name: 'aaa'}]
 ```
-注意如果是重新赋值，则等于重新分配空间，不会改变原数组。
+&emsp;&emsp;注意如果是重新赋值，则等于重新分配空间，不会改变原数组。
 ```
 const animals = [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}];
 const newAnimals = animals.slice(2);
@@ -209,7 +208,7 @@ console.log(animals);    // [{name: 'ant'}, {name: 'bison'}, {name: 'camel'}]
 ```
 
 #### 2019/7/26
-应用场景：我们需要请求并更新菜单栏中任务的状态，如果一个请求完成立马更新会导致 React 频繁刷新，需要缓冲批处理：
+&emsp;&emsp;应用场景：我们需要请求并更新菜单栏中任务的状态，如果一个请求完成立马更新会导致 React 频繁刷新，需要缓冲批处理：
 ```
 import { runInAction } from "mobx";
 
@@ -236,7 +235,7 @@ for (const task of tasks) {
 
 runHandlers();
 ```
-上述代码主要是利用了自定义的 `handlers` 来暂存状态更新函数，之后使用 mobx 提供的 `runInAction` 执行函数并更新状态，更新状态都需要使用 `action` 函数， `runInAction` 接受一个代码块并在一个(匿名)操作中执行，有利于动态创建和执行操作，`runInAction(f) = action(f)()`。此外，必要时还可加上 `lodash.memoize(func,[resolver])`，记录主函数请求结果。
+&emsp;&emsp;上述代码主要是利用了自定义的 `handlers` 来暂存状态更新函数，之后使用 mobx 提供的 `runInAction` 执行函数并更新状态，更新状态都需要使用 `action` 函数， `runInAction` 接受一个代码块并在一个(匿名)操作中执行，有利于动态创建和执行操作，`runInAction(f) = action(f)()`。此外，必要时还可加上 `lodash.memoize(func,[resolver])`，记录主函数请求结果。
 > For one-time-actions runInAction(name?, fn) can be used, which is sugar for action(name, fn)()
 
 
