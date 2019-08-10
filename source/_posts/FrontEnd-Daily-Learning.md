@@ -7,12 +7,47 @@ header-img:
 tags: FE
 ---
 #### 前言
-recap and cheat sheet ，记录每天学到的知识/想法。
-每日一问：今天你比昨天更博学了吗？
+📝 recap and cheat sheet ，记录每天学到的知识/想法。
+🔊 每日一问：今天你比昨天更博学了吗？
+
+
+#### 2019/8/9
+一、[useRef vs useState: Should we re-render or not?](https://www.codebeast.dev/usestate-vs-useref-re-render-or-not/)
+![FE_20190808](FE_20190809.png)
+二、Hooks 监听键盘事件
+keyCode: https://keycode.info/
+```
+function useKeyPress(targetKey) {
+  const [keyPressed, setKeyPressed] = useState(false);
+
+  function downHandler({ key }) {
+    if (key === targetKey) {
+      setKeyPressed(true);
+    }
+  }
+
+  const upHandler = ({ key }) => {
+    if (key === targetKey) {
+      setKeyPressed(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', downHandler);
+    window.addEventListener('keyup', upHandler);
+    return () => {
+      window.removeEventListener('keydown', downHandler);
+      window.removeEventListener('keyup', upHandler);
+    };
+  }, []);
+
+  return keyPressed;
+}
+```
 
 
 #### 2019/8/8
-&emsp;&emsp;工程中经常会看到 CI/CD 的概念。CI 指的是持续集成，侧重于简化发布准备工作的实践，比如自动测试；CD 指的是持续交付，意味着不仅让测试自动化，让发布流程也自动化了。更多概念对比可以参考：[Continuous integration vs. continuous delivery vs. continuous deployment](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment)
+&emsp;&emsp;工程中经常会看到 CI/CD 的概念。CI 指的是持续集成，侧重于简化发布准备工作的实践，比如自动测试；CD 指的是持续交付，意味着不仅让测试自动化，让发布流程也自动化了。更多概念对比可以参考：[Continuous integration VS continuous delivery VS continuous deployment](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment)
 &emsp;&emsp;下面这个图很清晰地描述了三者的不同：
 ![FE_20190808](FE_20190808.png)
 &emsp;&emsp;在 gitlab 上的实践可以参考：[基于 GitLab CI/CD 的自动化构建、发布实践](https://mp.weixin.qq.com/s/z2f1i2FgrVGofQR6nKTd1A)
