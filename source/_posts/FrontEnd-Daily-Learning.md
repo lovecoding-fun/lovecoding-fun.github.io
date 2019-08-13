@@ -11,6 +11,36 @@ tags: FE
 🔊 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/8/12
+一、download files using axios
+```
+import axios from "axios"
+
+axios.get(url,{
+  responseType: 'blob', // important
+  headers: {
+    'Authorization': AuthStr 
+  }
+}).then(resp => {
+  const {data} = resp;
+  const file = new File([data],"data.txt");
+  const objectURL = URL.createObjectURL(file);
+  const a = document.createElement("a");
+  a.href = objectURL;
+  a.download = "data.txt";
+  a.click();
+  URL.revokeObjectURL(objectURL);
+})
+```
+&emsp;&emsp;如果是单次点击下载多个文件，Chrome 只会弹出一个弹窗下载最后一个文件。这个时候可以加上 `setTimeout` ，触发多次下载，或是加上 `a.target = "_blank"` ，打开多个新窗口。
+二、curl
+查看命令：
+`curl --help`
+-H 指定Header：
+`curl -H "Authorization: XXXXXXXX" URL`
+`curl POST -d data -H "Authorization: XXXXXXXX" URL`
+
+
 #### 2019/8/9
 一、[useRef vs useState: Should we re-render or not?](https://www.codebeast.dev/usestate-vs-useref-re-render-or-not/)
 ![FE_20190808](FE_20190809.png)
