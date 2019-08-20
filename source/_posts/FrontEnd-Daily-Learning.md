@@ -11,6 +11,29 @@ tags: FE
 🔊 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/8/20
+模仿 react hook `useState` 的第二个参数：
+&emsp;&emsp;因为在 jest 测试中某个函数的参数是 `useState` 的第二个参数，写了一个替代，不过不确定是否有错。😳
+```
+// for example
+const [str,setStr] = useState<string[]>([]);
+
+// fake setStr
+let str:string[] = [];
+const setStr = (val: string[] | ((prev:string[]) => string[])) => {
+  if (typeof val === "object") {
+    str = val;
+  } else if (typeof val === "function") {
+    str = val(str)
+  }
+}
+```
+
+#### 2019/8/19
+[what is rel=noopener noreferrer link](https://searchenginelaws.com/seo/what-is-rel-noopener-noreferrer-tag/)
+&emsp;&emsp;使用 `a` 标签，且属性 `target="_blank"` 时，需要加上 `rel="noopener noreferrer"` 。可以防止新窗口利用 `window.opener` 的特性窃取原窗口信息。具体而言，如果 window A 打开了 window B，那么 B.opener 会返回 A。如果加上 `rel="noopener"` ，会返回 null 。
+
+
 #### 2019/8/12
 一、download files using axios
 ```
