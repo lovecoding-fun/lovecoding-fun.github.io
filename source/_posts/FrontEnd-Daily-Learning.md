@@ -11,6 +11,27 @@ tags: FE
 🔊 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/8/23
+`String.prototype.localeCompare()`
+> return a number, indicating whether the reference string comes before, after or is the same as the compareString in sort order. Returns one of three values:
+-1: if the reference string is sorted before the compareString
+ 0: if the two strings are equal
+ 1: if the reference string is sorted after the compareString
+
+`Array.prototype.sort()`
+>  sorts the elements of an array in place and returns the sorted array. 
+
+```
+items.sort((a,b) => a.localeCompare(b))
+```
+
+
+#### 2019/8/21
+今日阅读：
+[What is the difference between “npm install” and “npm ci”?](https://stackoverflow.com/questions/52499617/what-is-the-difference-between-npm-install-and-npm-ci)
+[Everything You Wanted To Know About package-lock.json But Were Too Afraid To Ask](https://medium.com/coinmonks/everything-you-wanted-to-know-about-package-lock-json-b81911aa8ab8)
+
+
 #### 2019/8/20
 模仿 react hook `useState` 的第二个参数：
 &emsp;&emsp;因为在 jest 测试中某个函数的参数是 `useState` 的第二个参数，写了一个替代，不过不确定是否有错。😳
@@ -30,7 +51,7 @@ const setStr = (val: string[] | ((prev:string[]) => string[])) => {
 ```
 
 #### 2019/8/19
-[what is rel=noopener noreferrer link](https://searchenginelaws.com/seo/what-is-rel-noopener-noreferrer-tag/)
+今日阅读：[What is rel=noopener noreferrer link](https://searchenginelaws.com/seo/what-is-rel-noopener-noreferrer-tag/)
 &emsp;&emsp;使用 `a` 标签，且属性 `target="_blank"` 时，需要加上 `rel="noopener noreferrer"` 。可以防止新窗口利用 `window.opener` 的特性窃取原窗口信息。具体而言，如果 window A 打开了 window B，那么 B.opener 会返回 A。如果加上 `rel="noopener"` ，会返回 null 。
 
 
