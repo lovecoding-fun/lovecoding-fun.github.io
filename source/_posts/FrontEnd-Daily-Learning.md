@@ -11,6 +11,55 @@ tags: FE
 🔊 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/8/24
+一、Promise
+```
+new Promise((resolve,reject) => {
+  // do something...
+})
+
+promise.then(onFulfilled[, onRejected]);
+promise.then(value => {
+  // fulfillment
+}, reason => {
+  // rejection
+});
+
+promise.catch(onRejected);
+promise.catch(function(reason) {
+   // rejection
+});
+```
+简单来说，`reject(value)` 可以被 `promise.then` 第二个函数参数捕获，也可以被 `promise.catch` 捕获。如果两者同时存在，会被 `promise.then` 第二个函数参数捕获，`promise.catch` 无输出。
+
+下载图片的典型例子：
+```
+function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    // img.onload = () => resolve(img)
+    img.addEventListener('load', e => resolve(img));
+    // img.onerror = () => reject(XXX)
+    img.addEventListener('error', () => {
+      reject(new Error(`Failed to load image's URL: ${url}`));
+    });
+    img.src = url;
+  });
+}
+
+loadImage('http://thecatapi.com/api/images/get?format=src&type=jpg&size=small')
+  .then(img => document.getElementById('image-holder').appendChild(img))
+  .catch(error => console.error(error));
+```
+
+二、await
+`[rv] = await expression`:
+>TL;DR returns the fulfilled value of the promise, 
+The await expression causes async function execution to pause until a Promise is settled, that is fulfilled or rejected, and to resume execution of the async function after fulfillment. When resumed, the value of the await expression is that of the fulfilled Promise.
+If the Promise is rejected, the await expression throws the rejected value.
+If the value of the expression following the await operator is not a Promise, it's converted to a resolved Promise.
+
+
 #### 2019/8/23
 `String.prototype.localeCompare()`
 > return a number, indicating whether the reference string comes before, after or is the same as the compareString in sort order. Returns one of three values:
