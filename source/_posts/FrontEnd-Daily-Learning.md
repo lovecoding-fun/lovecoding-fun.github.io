@@ -11,6 +11,36 @@ tags: FE
 🔊 每日一问：今天你比昨天更博学了吗？
 
 
+#### 2019/8/25
+今日踩坑记录：
+展开语法（spread syntax）只能取到 enumerable properties。例如：
+```
+const imageData = new ImageData(200, 100);
+// ImageData { width: 200, height: 100, data: Uint8ClampedArray[80000] }
+const result = {...imageData}
+// result 只会包含 data ，不能取到 width 和 height
+```
+
+
+#### 2019/8/24
+避免组件重新挂载，可以使用事件的形式：
+```
+class BussinessProvider {
+  sp$ = new Subject<{url: string, slic: string}>();
+}
+
+class Canvas {
+  componentDidMount() {
+     this.props.sp$.pipe(takeUntil(this.unmount$)).subscribe(ev => {
+        if (ev.url === this.url) {
+           this.handleSuperPixelChange(ev.slic)
+        }
+     })
+  }
+}
+```
+
+
 #### 2019/8/24
 一、Promise
 ```
