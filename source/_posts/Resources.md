@@ -1,5 +1,5 @@
 ---
-title: Resources Collection
+title: ML Resources Collection
 catalog: true
 date: 2019-10-06 17:52:54
 subtitle:
