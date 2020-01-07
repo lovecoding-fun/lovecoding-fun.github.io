@@ -13,8 +13,9 @@ tags: FE
 - [Github](https://github.com/)
 - [Medium](https://medium.com/)
 - [Reddit](https://www.reddit.com/)
-- [IMWeb](https://imweb.io/topic/tab/all)
-- [AlloyTeam](http://www.alloyteam.com/page/0/)
+- [腾讯 IMWeb 团队前端社区](https://imweb.io/topic/tab/all)
+- [腾讯 AlloyTeam 全端博客](http://www.alloyteam.com/page/0/)
+- [React 团队成员 Dan Abramov 个人博客](https://overreacted.io/)
 
 ### 资讯类
 - [每日时报](https://github.com/wubaiqing/zaobao)
