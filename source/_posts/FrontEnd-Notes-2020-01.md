@@ -12,6 +12,14 @@ tags: FE
 
 新年快乐！希望新的一年能坚持记笔记！
 
+#### 2020/01/05
+今天需要对某个数值进行类型校验，避免出现 `NaN`，本来是用 `!typeof value === 'number'`，后来发现：
+```
+typeof NaN === 'number'
+```
+关于为什么是这种输出，可以看 medium 上这篇文章：[NaN and typeof](https://javascriptrefined.io/nan-and-typeof-36cd6e2a4e43)。
+如果需要判断某个数是否为 `NaN`，可用 `isNaN(value)` 判断。
+
 #### 2020/01/04
 今天在处理正则表达式时遇到这样的疑惑：
 ```
