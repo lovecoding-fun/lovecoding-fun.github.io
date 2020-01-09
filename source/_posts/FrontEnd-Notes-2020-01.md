@@ -12,6 +12,20 @@ tags: FE
 
 新年快乐！希望新的一年能坚持记笔记！
 
+#### 2020/01/09
+一、[How to handle errors in Promise.all](https://stackoverflow.com/questions/30362733/handling-errors-in-promise-all/30378082)
+简单来说就是：
+```
+await Promise.all(vals.map(val => 
+  promise(val)
+  .catch(err => {
+    // handle here
+    return err
+  })
+))
+```
+二、[New ES2018 Features](https://css-tricks.com/new-es2018-features-every-javascript-developer-should-know/)
+
 #### 2020/01/05
 今天需要对某个数值进行类型校验，避免出现 `NaN`，本来是用 `!typeof value === 'number'`，后来发现：
 ```
