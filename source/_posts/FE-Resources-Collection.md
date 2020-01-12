@@ -30,3 +30,6 @@ tags: FE
 ### 面试宝典
 - [大前端面试宝典 - 图解前端](https://lucifer.ren/fe-interview/#/)
 
+### 其他
+- [Learn X in Y minutes](https://learnxinyminutes.com/)
+

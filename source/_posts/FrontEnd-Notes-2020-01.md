@@ -12,6 +12,14 @@ tags: FE
 
 新年快乐！希望新的一年能坚持记笔记！
 
+#### 2020/01/12
+一、[Why ['1', '7', '11'].map(parseInt) returns [1, NaN, 3] in Javascript](https://medium.com/dailyjs/parseint-mystery-7c4368ef7b21)
+一篇非常有趣的文章，开篇一张图：
+![image.png](https://i.loli.net/2020/01/12/grShLvH28RDXtYM.png)
+出现这种结果的原因，在于 `map` 函数默认会传入三个参数：currentValue、currentIndex 以及 full array 。而对于 `parseInt` 而言，第二个参数表示基数，用此来解析数组中的每个字符串，取值是 2 ~ 36 的整数。'1' 以 0 为基数进行解析，0 的布尔值为 `false`，等于没有传入第二个参数，因此会以默认基数 10 进行解析，输出 1 ；'7' 以 1 为基数 进行解析，会输出 `NaN` ；'11' 以 2 为基数解析，会输出 3。
+二、[The Power of the Observer Pattern in JavaScript](https://medium.com/better-programming/the-observer-pattern-in-javascript-4f4e0b908d5e)
+介绍了 Observer Patten，并用 JS 写了一份简单实现。本质就是维护一个观察者列表，每次有变化时遍历通知。
+
 #### 2020/01/09
 一、[How to handle errors in Promise.all](https://stackoverflow.com/questions/30362733/handling-errors-in-promise-all/30378082)
 简单来说就是：
