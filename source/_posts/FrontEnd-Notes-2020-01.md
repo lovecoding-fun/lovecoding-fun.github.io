@@ -12,11 +12,22 @@ tags: FE
 
 新年快乐！希望新的一年能坚持记笔记！
 
+#### 2020/01/13
+一、[3 things you didn’t know about the forEach loop in JS](https://medium.com/front-end-weekly/3-things-you-didnt-know-about-the-foreach-loop-in-js-ff02cec465b1)
+总结一下，就是在 `forEach` 中，使用 `return` 、 `break` 、 `continute` 都是无效的。 `return` 不会退出函数，`break` 和 `continute` 不允许在 `forEach` 中使用。如果需要能退出循环，使用简单的 `for` loop 即可。MDN 上已经写明：
+> There is no way to stop or break a forEach() loop other than by throwing an exception. If you need such behavior, the forEach() method is the wrong tool.
+
+二、[under_scores, camelCase and PascalCase - The three naming conventions every programmer should be aware of](https://dev.to/prahladyeri/underscores-camelcasing-and-pascalcasing-the-three-naming-conventions-every-programmer-should-be-aware-of-3aed)
+简单介绍了编程中三种命名规则，可以学一下正确的名词表达：
+![image.png](https://i.loli.net/2020/01/13/kAnN3GvZBiWDPRu.png)
+`camelCase` 大家都不陌生，就是最常见的首字母小写驼峰样式；`under_scores` 就是以下划线隔开多个小写字母，JS 中这些命名方式比较少用；`PascalCase` 就是首字母大写驼峰样式。此外，函数、变量、类、命名空间这些可以统称为 `tokens` 。
+
 #### 2020/01/12
 一、[Why ['1', '7', '11'].map(parseInt) returns [1, NaN, 3] in Javascript](https://medium.com/dailyjs/parseint-mystery-7c4368ef7b21)
 一篇非常有趣的文章，开篇一张图：
 ![image.png](https://i.loli.net/2020/01/12/grShLvH28RDXtYM.png)
 出现这种结果的原因，在于 `map` 函数默认会传入三个参数：currentValue、currentIndex 以及 full array 。而对于 `parseInt` 而言，第二个参数表示基数，用此来解析数组中的每个字符串，取值是 2 ~ 36 的整数。'1' 以 0 为基数进行解析，0 的布尔值为 `false`，等于没有传入第二个参数，因此会以默认基数 10 进行解析，输出 1 ；'7' 以 1 为基数 进行解析，会输出 `NaN` ；'11' 以 2 为基数解析，会输出 3。
+
 二、[The Power of the Observer Pattern in JavaScript](https://medium.com/better-programming/the-observer-pattern-in-javascript-4f4e0b908d5e)
 介绍了 Observer Patten，并用 JS 写了一份简单实现。本质就是维护一个观察者列表，每次有变化时遍历通知。
 
@@ -32,6 +43,7 @@ await Promise.all(vals.map(val =>
   })
 ))
 ```
+
 二、[New ES2018 Features](https://css-tricks.com/new-es2018-features-every-javascript-developer-should-know/)
 
 #### 2020/01/05
