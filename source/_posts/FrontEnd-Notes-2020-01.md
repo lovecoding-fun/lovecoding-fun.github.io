@@ -12,6 +12,45 @@ tags: FE
 
 新年快乐！希望新的一年能坚持记笔记！
 
+#### 2020/01/15
+一、[一步一步解码 PNG 图片](https://vivaxyblog.github.io/2019/12/07/decode-a-png-image-with-javascript-cn.html)
+可以当成一份扩展阅读，讲了怎么从一张二进制 PNG 图片转成包含像素数据的 ImageData 。
+之前在工作中，主要是利用 `canvas` 得到 `imageData` ：
+```
+export function getImageData(url: string): Promise<ImageData> {
+  const img = document.createElement("img");
+  return new Promise((resolve, reject) => {
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        resolve(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      } catch (err) {
+        reject(err);
+      }
+    };
+    img.onerror = err => {
+      reject(err);
+    };
+    img.crossOrigin = "Anonymous";
+    img.src = url;
+  });
+}
+```
+`imageData` 是不能直接存进后台数据库的，我们需要进行 PNG 编码转换为二进制数据，用到的是 [UPNG.js](https://github.com/photopea/UPNG.js/) 这个库：
+```
+import UPNG from "upng-js";
+const buffer: ArrayBuffer = UPNG.encode(
+  [imageData.buffer as ArrayBuffer],
+  image.width,
+  image.height,
+  0
+);
+```
+
 #### 2020/01/13
 一、[3 things you didn’t know about the forEach loop in JS](https://medium.com/front-end-weekly/3-things-you-didnt-know-about-the-foreach-loop-in-js-ff02cec465b1)
 总结一下，就是在 `forEach` 中，使用 `return` 、 `break` 、 `continute` 都是无效的。 `return` 不会退出函数，`break` 和 `continute` 不允许在 `forEach` 中使用。如果需要能退出循环，使用简单的 `for` loop 即可。MDN 上已经写明：

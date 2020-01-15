@@ -6,25 +6,27 @@ subtitle:
 header-img:
 tags: FE
 ---
-#### Git
+👷🚧 工作中用到的一些技术文档集合，持续更新中。
+
+#### git
 - [Oh Shit, Git!?!](http://ohshitgit.com/)
 
-#### Docker
+#### docker
 - [官方文档](https://docs.docker.com/)
 
-#### Sentry
+#### sentry
 - [官方文档](https://docs.sentry.io/)
 
 #### JWT
 - [Introduction to JSON Web Tokens](https://jwt.io/introduction/)
 
-#### JEST
+#### jest
 - [官方文档](https://jestjs.io/docs/en/getting-started)
 
-#### Enzyme
+#### enzyme
 - [API introduction](https://airbnb.io/enzyme/)
 
-#### Rxjs
+#### rxjs
 - [官方文档](https://rxjs-dev.firebaseapp.com/guide/overview)
 - [Learn RxJS](https://www.learnrxjs.io/)
 - [RxJS Marbles: Interactive diagrams of Rx Observables](https://rxmarbles.com/)
@@ -35,3 +37,9 @@ tags: FE
 #### immer
 - [官方文档](https://immerjs.github.io/immer/docs/introduction)
 - [Introducing Immer: Immutability the easy way](https://medium.com/hackernoon/introducing-immer-immutability-the-easy-way-9d73d8f71cb3) （注意里面提到的 `structural sharing`）
+
+#### react-beautiful-dnd
+- [官方文档](https://github.com/atlassian/react-beautiful-dnd)
+
+### Json Patch
+- [Introduction](http://jsonpatch.com/)
