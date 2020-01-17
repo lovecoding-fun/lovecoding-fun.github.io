@@ -12,6 +12,82 @@ tags: FE
 
 新年快乐！希望新的一年能坚持记笔记！
 
+#### 2020/01/17
+[TypeScript: Conditional Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html#conditional-types)
+考虑以下场景：我们有一个获取资源的接口，根据资源类型返回不同的数据类型的数据，代码大致如下：  
+```
+getResources<T>(type: "tasks"|"jobs"|"queues") {
+  return axios.get<T>('http://.......')
+}
+
+// use
+const tasks = await getResources<TaskList>("tasks")
+const jobs = await getResources<JobList>("jobs")
+```
+如果我们想要并行发送请求，可以使用 `Promise.all()` ：
+```
+const [tasks, jobs] = await Promise.all(["tasks","jobs"].map(type => {
+  return getResources<TaskList|JobList>(type)
+}))
+```
+上述代码引起的问题是，`tasks` 和 `jobs` 的类型会是 `TaskList|JobList` ，如果我们之后要访问他们的属性，避免不了 `as TaskList` ，`as JobList` 这种写法。优化做法是，使用 ts 的 conditional types，可以从输入类型推断出输出类型：
+```
+export type ResType = "tasks" | "jobs" | "queues" ;
+export type ResData<T extends ResType> = 
+  T extends "tasks" ? TaskList: 
+  T extends "jobs"  ? JobList : 
+  T extends "queues" ? QueueList :
+  never;
+
+getResources<T extends ResType>(type: T) {
+  return axios.get<ResData<T>>('http://.......')
+}
+```
+这样，在调用 `getResources` 就不用显式传入 `T` 。接下来，为了解决类型在 `Promise.all()` 用 `map` 可能推断不出来的问题，可以使用 tuple ：
+```
+const taskPromise = Promise.resolve(getResources("tasks"));
+const jobPromise = Promise.resolve(getResources("jobs"));
+const [tasks, jobs] = await Promise.all([taskPromise,jobPromise])
+```
+一顿操作之后，我们就可以准确得到 `tasks` 和 `jobs` 的类型了。😎
+
+#### 2020/01/16
+今日踩坑记录。考虑以下代码：
+```
+const [state, setState] = useState<string[]>([]);
+
+useEffect(() => {
+  const loadData = async () => {
+    const lists = ["list1", "list2", "list3"];
+    for(const list of lists) {
+      const {data} = await thisIsPromise(list);
+      setState([...state, ...data])
+    }
+  };
+  // call async function 
+  loadData(); 
+},[])
+```
+运行上面的代码，`state` 并不会返回所有 `list` 的集合。原因是 `setState` 是异步更新的，每次循环调用 `setState([...state, ...data])` 时， `state` 都是初始值，也就是空数组。如果我们想要得到上一个 `state` 的值，只能使用下面这种写法：
+```
+const [state, setState] = useState<string[]>([]);
+
+useEffect(() => {
+  const loadData = async () => {
+    const lists = ["list1", "list2", "list3"];
+    for(const list of lists) {
+      const {data} = await thisIsPromise(list);
+      // HERE!
+      setState(prev => [...prev,...data])
+    }
+  };
+  // call async function 
+  loadData(); 
+},[])
+```
+React 文档 [这部分](https://reactjs.org/docs/hooks-reference.html#functional-updates) 也特别说明了这一点:
+> If the new state is computed using the previous state, you can pass a function to setState. The function will receive the previous value, and return an updated value.
+
 #### 2020/01/15
 一、[一步一步解码 PNG 图片](https://vivaxyblog.github.io/2019/12/07/decode-a-png-image-with-javascript-cn.html)
 可以当成一份扩展阅读，讲了怎么从一张二进制 PNG 图片转成包含像素数据的 ImageData 。

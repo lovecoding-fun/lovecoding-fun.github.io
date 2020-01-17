@@ -8,6 +8,9 @@ tags: FE
 ---
 👷🚧 工作中用到的一些技术文档集合，持续更新中。
 
+#### typescript
+- [docs and handbook](https://www.typescriptlang.org/docs/home.html)
+
 #### git
 - [Oh Shit, Git!?!](http://ohshitgit.com/)
 
