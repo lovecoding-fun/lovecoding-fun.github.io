@@ -12,6 +12,87 @@ tags: FE
 
 新年快乐！希望新的一年能坚持记笔记！
 
+#### 2020/01/28
+今日阅读：[How to Deep Copy Objects and Arrays in JavaScript](https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089)
+如果数组/对象中都是 `primitive value` ，要实现深复制，常用的有下面三种方法：
+1. spread operator ...
+```
+const array = ['😉','😊','😇']
+
+const copyWithEquals = array // Changes to array will change copyWithEquals
+console.log(copyWithEquals === array) // true (The assignment operator did not make a copy)
+
+const copyWithSpread = [...array] // Changes to array will not change copyWithSpread
+console.log(copyWithSpread === array) // false (The spread operator made a shallow copy)
+
+array[0] = '😡' // Whoops, a bug
+
+console.log(...array) // 😡 😊 😇
+console.log(...copyWithEquals) // 😡 😊 😇
+console.log(...copyWithSpread) // 😉 😊 😇
+```
+2. .slice()
+```
+const array = ['😉','😊','😇']
+
+const copyWithEquals = array // Changes to array will change copyWithEquals
+console.log(copyWithEquals === array) // true (The assignment operator did not make a copy)
+
+const copyWithSlice = array.slice() // Changes to array will not change copyWithSlice
+console.log(copyWithSlice === array) // false (Using .slice() made a shallow copy of the array)
+
+array[0] = '😡' // Whoops, a bug
+
+console.log(...array) // 😡 😊 😇
+console.log(...copyWithEquals) // 😡 😊 😇
+console.log(...copyWithSlice) // 😉 😊 😇
+```
+3. .assign()
+```
+const array = ['😉','😊','😇']
+
+const copyWithEquals = array // Changes to array will change copyWithEquals
+const copyWithAssign = [] // Changes to array will not change copyWithAssign
+Object.assign(copyWithAssign, array) // Object.assign(target, source)
+
+array[0] = '😡' // Whoops, a bug
+
+console.log(...array) // 😡 😊 😇
+console.log(...copyWithEquals) // 😡 😊 😇
+console.log(...copyWithAssign) // 😉 😊 😇
+```
+
+如果数组中的元素也是数组/对象，上述方法只能实现第一层次但深复制，没法对元素也进行深复制。作者提供了5种方法：
+1. [lodash](https://lodash.com/)
+`lodash` 提供了 `_.clone()` 以及 `_.cloneDeep()` 两个方法，第一个方法实现的是第一层面的深复制，第二个方法可以实现完全的深复制。
+2. [Ramda](https://ramdajs.com/)
+提供了 `R.clone()` 方法实现完全的深复制，相当于 `lodash.cloneDeep()` 。
+3. custom function
+可以自己实现一个深复制函数，基本思想是判断输入是否为数组/对象，如果是则继续逐层遍历赋值，否则返回原始值。还需考虑值为 `null` 的特殊情况，因为 `typeof null = "object"`
+```
+const deepCopyFunction = inObject => {
+  let outObject, value, key;
+
+  if(typeof inObject !== "object" || inObject === null) {
+    return inObject;
+  };
+
+  outObject = Array.isArray(inObject) ? [] : {};
+
+  for(key in inObject) {
+    value = inObject[key];
+
+    outObject[key] = (typeof value === "object" && value !== null) ? deepCopyFunction(value) : value
+  };
+
+  return outObject;
+}
+```
+4. `JSON.parse(JSON.stringify(object))`
+该方法对元素有一定的要求，详见 stackoverflow 上[这个回答](https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript/122704#122704)。总结而言，如果元素只是普通的数组对象，可以使用这个方法。
+5. [rfdc](https://www.npmjs.com/package/rfdc)
+作者想要推广的一个库，优点是速度很快。
+
 #### 2020/01/17
 [TypeScript: Conditional Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html#conditional-types)
 考虑以下场景：我们有一个获取资源的接口，根据资源类型返回不同的数据类型的数据，代码大致如下：  
@@ -45,11 +126,13 @@ getResources<T extends ResType>(type: T) {
 ```
 这样，在调用 `getResources` 就不用显式传入 `T` 。接下来，为了解决类型在 `Promise.all()` 用 `map` 可能推断不出来的问题，可以使用 tuple ：
 ```
+// or just `getResources("tasks")` if RV of getResources is already a promise
 const taskPromise = Promise.resolve(getResources("tasks"));
 const jobPromise = Promise.resolve(getResources("jobs"));
 const [tasks, jobs] = await Promise.all([taskPromise,jobPromise])
 ```
-一顿操作之后，我们就可以准确得到 `tasks` 和 `jobs` 的类型了。😎
+一顿操作之后，我们就可以准确得到 `tasks` 和 `jobs` 的类型了。😎 
+扩展阅读：[Promise.resolve()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve) 、 [Promise.all()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)
 
 #### 2020/01/16
 今日踩坑记录。考虑以下代码：
