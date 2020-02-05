@@ -12,6 +12,38 @@ tags: FE
 
 新年快乐！希望新的一年能坚持记笔记！
 
+#### 2020/01/29
+今日阅读：[Here’s Why Mapping a Constructed Array in JavaScript Doesn’t Work](https://itnext.io/heres-why-mapping-a-constructed-array-doesn-t-work-in-javascript-f1195138615a)
+当我们想要生成一个 0 ~ 99 的数组时，除了最基础的遍历赋值，还可以利用 [Array()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Array) 方法。
+但使用 `Array.map()` ，并不会正确赋值：
+```
+const arr = Array(100).map((_, i) => i);
+console.log(arr[0] === undefined);  // true
+```
+造成这个问题的原因是，在 JS 中 数组其实是一个对象，索引是 `key` ，数组元素是 `value` ，如：
+```
+['a', 'b', 'c']
+=> 
+{
+  0: 'a',
+  1: 'b',
+  2: 'c',
+  length: 3
+}
+```
+当使用 `Array()` 构造函数时，只会生成一个“真空”对象：
+```
+{
+  //no index keys!
+  length: 100
+}
+```
+由于对象上并不存在 `key` ，`map` 函数并不会进行遍历，`reduce` 、`filter` 、`forEach` 等迭代函数也有同样的表现。解决办法是使用展开操作符：
+```
+const arr = [...Array(100)].map((_, i) => i);
+console.log(arr[0]); // 0
+```
+
 #### 2020/01/28
 今日阅读：[How to Deep Copy Objects and Arrays in JavaScript](https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089)
 如果数组/对象中都是 `primitive value` ，要实现深复制，常用的有下面三种方法：
