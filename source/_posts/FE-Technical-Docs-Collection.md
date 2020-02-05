@@ -22,6 +22,7 @@ tags: FE
 
 #### JWT
 - [Introduction to JSON Web Tokens](https://jwt.io/introduction/)
+- [阮一峰 JSON Web Token 入门教程](http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html)，比较通俗易懂
 
 #### jest
 - [官方文档](https://jestjs.io/docs/en/getting-started)
