@@ -259,6 +259,7 @@ render() {
 ```
 
 ### Higher-Order Components
+[link](https://reactjs.org/docs/higher-order-components.html)
 定义：高阶组件是一个接受组件作为参数，返回新组件的函数。
 ```
 const EnhancedComponent = higherOrderComponent(WrappedComponent);
@@ -310,4 +311,63 @@ render() {
   // That causes the entire subtree to unmount/remount each time!
   return <EnhancedComponent />;
 }
+```
+
+### JSX In Depth
+[link](https://reactjs.org/docs/jsx-in-depth.html)
+JSX 是 `React.createElement(component, props, ...children)` 的语法糖，编译示例如下：
+```
+<MyButton color="blue" shadowSize={2}>
+  Click Me
+</MyButton>
+
+// compiles into:
+React.createElement(
+  MyButton,
+  {color: 'blue', shadowSize: 2},
+  'Click Me'
+)
+```
+若是 self-closing tag 如 `<div/>` ，第三个参数是 `null` 。注意组件的首字母一定要大写，否则会被当成普通的内置组件。
+可以在 JSX 中使用点运算符引用 React 组件：
+```
+import React from 'react';
+
+const MyComponents = {
+  DatePicker: function DatePicker(props) {
+    return <div>Imagine a {props.color} datepicker here.</div>;
+  }
+}
+
+// use dot-notation
+function BlueDatePicker() {
+  return <MyComponents.DatePicker color="blue" />;
+}
+```
+但普通的表达式不能指示 React 元素类型，如果想要动态显示组件，需要先赋值给一个大写字母开头的变量：
+```
+import React from 'react';
+import { PhotoStory, VideoStory } from './stories';
+
+const components = {
+  photo: PhotoStory,
+  video: VideoStory
+};
+
+function Story(props) {
+  // you can't write `return <components[props.storyType] story={props.story} />;`
+  // Correct! JSX type can be a capitalized variable.
+  const SpecificStory = components[props.storyType];
+  return <SpecificStory story={props.story} />;
+}
+```
+在同时包含开始标签和结束标签的JSX表达式中，tag 之间的内容作为特殊的 props：`props.children` 传递。
+布尔值、null 和 undefined 会被 React 忽略，下述表达式渲染结果相同：
+```
+<div />
+<div></div>
+<div>{false}</div>
+<div>{null}</div>
+<div>{undefined}</div>
+<div>{true}</div>
 ```
