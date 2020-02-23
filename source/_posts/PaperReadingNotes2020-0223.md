@@ -1,3 +1,13 @@
+---
+title: Paper Reading 2020-02-23
+catalog: true
+date: 2020-02-23 20:48:34
+subtitle:
+header-img:
+mathjax: true
+tags: ML
+---
+
 两篇论文的记录
 ### Scaling Up Neural Architecture Search with Big Single-Stage Models
 Universal slimmable network的kernel+depth+resolution扩展版，方法上没啥创新，所以被拒了  
