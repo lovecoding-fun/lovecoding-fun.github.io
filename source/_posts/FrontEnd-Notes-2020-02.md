@@ -13,6 +13,43 @@ tags:
 
 动笔时发现已经是2月21号了，惭愧啊惭愧。
 
+#### 2020/02/24
+今日阅读：[How to use throttle or debounce with React Hook?](https://stackoverflow.com/questions/54666401/how-to-use-throttle-or-debounce-with-react-hook)
+在使用函数式组件时，如果我们需要引入 lodash 的 `throttle` 或 `debounce` ，很容易写出如下错误代码：
+```
+const ExComp:React.FC = () => {
+  ....
+  // call it somewhere
+  const throttle = lodash.throttle((value) => {
+    // do something
+  },2000)
+  ...
+  return <></>
+}
+```
+上述代码中，在函数式组件中引入了一个 throttle 函数（底层实现是 `setTimeout`），然而对于函数式组件而言，每一次 rerender 都会重新初始化变量，所以 throttle 并不会生效。解决这个问题可以使用 `useRef` 或是 `useCallback` 。如：
+```
+const App = () => {
+  const [value, setValue] = useState(0)；
+
+  const throttled = useRef(
+    throttle((newValue) => console.log(newValue), 1000)
+  )
+  useEffect(() => throttled.current(value), [value])
+
+  // or
+  // const throttled = useCallback(
+  //  throttle((newValue) => console.log(newValue), 1000),
+  //  []
+  // );
+  // useEffect(() => throttled(value), [value])
+
+  return (
+    <button onClick={() => setValue(value + 1)}>{value}</button>
+  )
+```
+调用时直接使用 `throttled.current()` （或 `throttled()` ）即可。注意如果在 throttle 函数中需要用到函数外的 state 值，只能取到初始值（闭包），这种时候只能将所需参数作为 params 传进去。或是将 throttle 函数移到组件外。
+
 #### 2020/02/21
 在使用 react hooks 时，如果需要在组件中实例一个类（如 `new stroe()`）；为了让该变量变成一个 state ，而不是每次重新渲染时都会重新初始化，我们会使用 `useState` ：
 ```
