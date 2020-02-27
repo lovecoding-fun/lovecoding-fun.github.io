@@ -4,7 +4,7 @@ catalog: true
 date: 2020-02-21 10:29:52
 subtitle:
 header-img:
-tags:
+tags: FE
 ---
 
 #### About
@@ -12,6 +12,69 @@ tags:
 📅 2020 年 2 月的零散学习记录。
 
 动笔时发现已经是2月21号了，惭愧啊惭愧。
+
+#### 2020/02/27
+今天在处理函数式组件时遇到了一个问题，将某个函数作为回调函数传到子组件，在回调函数中打印 state ，只能取到初始值，没有打印出最新结果。排查了很久，后来发现在子组件中，该函数用于注册事件监听函数，因此事件监听绑定的函数，是第一次渲染时传进去的，后续并不会更新，永远只能获取到初始值。
+不考虑父子组件，用最简单的例子复现这个问题：
+```
+const App:React.FC = () => {
+  const [state,setState] = useState(0);
+
+  useEffect(() => {
+    window.addEventListener("wheel", handleWheelChange);
+    return () => {
+      window.removeEventListener("wheel", handleWheelChange);
+    }
+  },[]);
+
+  const handleWheelChange = () => {
+    // always print 0
+    console.log(state)
+  };
+  
+  return <></>
+} 
+```
+如果要解决这个问题，可以使用 ref ，取值时通过 `ref.current` 取：
+```
+const App:React.FC = () => {
+  const [state,setState] = useState(0);
+  // create ref
+  const stateRef = useRef(state);
+
+  // update ref.current when state changes
+  useEffect(() => {
+    ref.current = state;
+  },[state])
+
+  useEffect(() => {
+    window.addEventListener("wheel", handleWheelChange);
+    return () => {
+      window.removeEventListener("wheel", handleWheelChange);
+    }
+  },[]);
+
+  const handleWheelChange = () => {
+    // access newest state correctly
+    console.log(ref.current)
+  };
+  
+  return <></>
+} 
+```
+上述代码只是一种思路的表达，在实际项目中，直接使用 `useRef` 初始化变量就好了，没有必要先 `useState` ，再对 state `useRef` 。但有时使用了 `useReducer` ，如果只需要用到其中某个变量，就可以用上述代码中提到的方法。
+第二种方法是通过调用 `setState` ，传入函数来取到最新的 state ，如：
+```
+...
+const handleWheelChange = () => {
+    setState(prev => {
+      // prev is the newest state, do anything you need
+      // remenber to return value
+      return prev;
+    })
+  };
+...
+```
 
 #### 2020/02/24
 今日阅读：[How to use throttle or debounce with React Hook?](https://stackoverflow.com/questions/54666401/how-to-use-throttle-or-debounce-with-react-hook)
