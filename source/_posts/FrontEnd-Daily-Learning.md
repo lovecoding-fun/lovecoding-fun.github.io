@@ -1,5 +1,5 @@
 ---
-title: FrontEnd Daily Learning
+title: FrontEnd Daily Learning [2019.07-2019.08]
 catalog: true
 date: 2019-07-11 19:44:53
 subtitle:
