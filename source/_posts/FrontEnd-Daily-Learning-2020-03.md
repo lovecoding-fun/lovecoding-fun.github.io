@@ -1,5 +1,5 @@
 ---
-title: 'Front Notes [2020.03]'
+title: 'FrontEnd Daily Learning [2020.03]'
 catalog: true
 date: 2020-03-03 16:48:47
 subtitle:

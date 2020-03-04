@@ -1,5 +1,5 @@
 ---
-title: FrontEnd Notes [2020.02]
+title: FrontEnd Daily Learning [2020.02]
 catalog: true
 date: 2020-02-21 10:29:52
 subtitle:
