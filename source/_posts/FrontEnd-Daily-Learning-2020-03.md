@@ -12,6 +12,27 @@ tags: FE
 
 🤦‍♀️ 新的一月，新的打气。希望自己这个月能多记笔记。
 
+#### 2020/03/05
+`URL()` 函数用于构造 URL，参考 [mdn](https://developer.mozilla.org/en-US/docs/Web/API/URL)，内置多种静态属性，常用属性的输出值如下：
+示例：`https://domain.cc:80/article?page=1`
+|properties|meaning|output|
+|---|---|---|
+|href|完整 URL|`https://domain.cc:80/article?page=1`|
+|origin|URL 协议、域名及端口号|`https://domain.cc:80`|
+|protocol|URL 协议|`https:`|
+|host|URL 域名及端口号|`domain.cc:80`|
+|hostname|URL 域名|`domain.cc`|
+|port|URL 端口号|`80`|
+|pathname| "/" 后的文件路径|`/article`|
+|search|URL 请求参数|`?page=1`|
+|hash|"#" 后的内容||
+
+在 URL 对象上调用 `toString()` 方法，返回 `url.href` :
+```
+const url = new URL("http://......")
+url.toString() // a synonym for URL.href
+```
+
 #### 2020/03/04
 BroadcastChannel（[mdn](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel)）提供了在同源的不同的 windows，tabs，frames，iframes 之间通信的方法。通过触发一个 message 事件，消息可以广播到所有监听了该频道的 BroadcastChannel 对象。
 实际应用中，我们可以用于检测用户是否打开了多个窗口。在 window 中注册一个 BroadcastChannel 对象，监听 `load` 和 `hashchange` 事件，广播当前页面的 url ，并监听 message 事件。这样当打开第二个页面时，第一个页面就会接收到其发送的消息，提示用户执行相关操作。代码如下：
