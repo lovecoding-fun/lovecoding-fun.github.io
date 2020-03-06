@@ -12,9 +12,55 @@ tags: FE
 
 🤦‍♀️ 新的一月，新的打气。希望自己这个月能多记笔记。
 
+#### 2020/03/06
+考虑如下树形数据结构：
+```
+// interface TreeData
+{
+  value: "",
+  children: [
+    {
+      value: "",
+      children: [
+        {value:"",children:[{value:""}]},
+        {value:""}
+      ]
+    }
+  ]
+}
+```
+当我们有一组 children 标签和一个节点的 value 值，想要得到该节点在树形结构中的详细信息，可以使用递归遍历：
+```
+export function getLabelDetail(value: string, labels: TreeData[]) {
+  const checkIfHitNode = (value: string, node: TreeData) => {
+    if (node.value === value) {
+      return node;
+    } else if (node.children) {
+      for (let i = 0; i < node.children.length; i++) {
+        const result = checkIfHitNode(value, node.children[i]);
+        if (result) {
+          return result;
+        }
+      }
+    } else {
+      return null;
+    }
+  };
+
+  for (let i = 0; i < labels.length; i++) {
+    const hit = checkIfHitNode(value, labels[i]);
+    if (hit) {
+      return hit;
+    }
+  }
+}
+```
+注意 `checkIfHitNode()` 函数的输入值是 value 以及一个根节点，我们从根节点出发，依次检查 `children` 中是否包含要寻找的节点。
+
 #### 2020/03/05
 `URL()` 函数用于构造 URL，参考 [mdn](https://developer.mozilla.org/en-US/docs/Web/API/URL)，内置多种静态属性，常用属性的输出值如下：
 示例：`https://domain.cc:80/article?page=1`
+
 |properties|meaning|output|
 |---|---|---|
 |href|完整 URL|`https://domain.cc:80/article?page=1`|
