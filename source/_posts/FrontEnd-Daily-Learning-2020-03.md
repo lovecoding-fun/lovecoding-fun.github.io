@@ -12,6 +12,37 @@ tags: FE
 
 🤦‍♀️ 新的一月，新的打气。希望自己这个月能多记笔记。
 
+#### 2020/03/07
+一、TDZ: [What is the temporal dead zone?](https://stackoverflow.com/questions/33198849/what-is-the-temporal-dead-zone)
+ES6 新增了 `const` 和 `let` 两个关键字。他们与 `var` 一样，声明都会被提升（hoisted）。但对于 `const` 和 `let` 而言，存在一个“暂时性死区”的概念：如果在声明之前访问一个 `var` 变量，会返回 `undefined` ，但访问 `let` 或 `const` 变量会返回 `ReferenceError` ：
+```
+console.log(aVar); // undefined
+console.log(aLet); // causes ReferenceError: aLet is not defined
+var aVar = 1;
+let aLet = 2;
+```
+只有声明了变量（不是赋值），TDZ 才会结束：
+```
+//console.log(aLet)  // would throw ReferenceError
+
+let aLet;
+console.log(aLet); // undefined
+aLet = 10;
+console.log(aLet); // 10
+```
+从上面的例子很容易陷入 “let 声明不会被提升” 的误区，实际上通过下面这个例子就可以证明声明会被提升：
+```
+let x = 'outer value';
+(function() {
+  // start TDZ for x
+  console.log(x);
+  let x = 'inner value'; // declaration ends TDZ for x
+}());
+```
+上面例子输出 `ReferenceError`，如果声明没有提升，会输出 "outer value" 。
+
+二、[What is Waiting (TTFB) in DevTools, and what to do about it](https://scaleyourcode.com/blog/article/27)
+
 #### 2020/03/06
 考虑如下树形数据结构：
 ```
