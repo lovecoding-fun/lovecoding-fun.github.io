@@ -12,6 +12,13 @@ tags: FE
 
 🤦‍♀️ 新的一月，新的打气。希望自己这个月能多记笔记。
 
+#### 2020/03/09
+[Yarn vs NPM](https://www.keycdn.com/blog/npm-vs-yarn)
+npm 和 yarn 都是包管理工具，yarn 是 Facebook 研发的，意在解决 npm 一致性、安全性和速度方面的一些问题。两者只是安装的手段不同，内部依赖的 npm structure 是相同的。yarn 相比 npm 的优势在于：
+1. yarn.lock 文件可以保证每个设备上安装的包都是相同的
+2. npm 只能通过序列化的方式一个接一个地安装包，yarn 可以同时执行多个安装步骤，因此速度更快
+3. npm 会自动从依赖项运行代码并允许动态添加软件包，yarn 只能从 yarn.lock 或 package.json 文件安装，因此更安全；且其在安装前使用校验和，以确保每个包的完整性
+
 #### 2020/03/07
 一、TDZ: [What is the temporal dead zone?](https://stackoverflow.com/questions/33198849/what-is-the-temporal-dead-zone)
 ES6 新增了 `const` 和 `let` 两个关键字。他们与 `var` 一样，声明都会被提升（hoisted）。但对于 `const` 和 `let` 而言，存在一个“暂时性死区”的概念：如果在声明之前访问一个 `var` 变量，会返回 `undefined` ，但访问 `let` 或 `const` 变量会返回 `ReferenceError` ：
