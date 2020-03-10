@@ -12,12 +12,53 @@ tags: FE
 
 🤦‍♀️ 新的一月，新的打气。希望自己这个月能多记笔记。
 
+预告：上传下载
+
+#### 2020/03/10
+[prettier](https://prettier.io/docs/en/) 可用于格式化特定文件格式的代码，可与很多 pre-commit 工具配合使用，在提交 commit 之前自动格式化你通过 `git add` 加入暂存区的代码。
+使用文档可参考[官方链接](https://prettier.io/docs/en/precommit.html)，实际项目中用得较多的是 `lint-staged` ，它可以和其他很多代码质量工具如 ESLint 、 Stylelint 等结合使用。需要的依赖是 `prettier` 、 `husky` 以及 `lint-staged` :
+```
+// yarn
+yarn add prettier husky lint-stage --dev
+
+// npm
+npm install prettier husky lint-stage --save-dev
+```
+注意官网提供了以下命令用于直接配置 lint-staged ：`npx mrm lint-staged` 。但试验中发现不生效，参考该[答案](https://stackoverflow.com/questions/50048717/lint-staged-not-running-on-precommit/56212836#56212836)后发现该命令确实只在 package.json 中设置了 husky 和 lint-stage 配置，而没有将其作为依赖项添加或安装。为确保正确运行，还是直接安装比较省事。
+安装完所需依赖后，在 package.json 加入以下代码：
+```
+"husky": {
+  "hooks": {
+    "pre-commit": "lint-staged"
+  }
+},
+"lint-staged": {
+  "src/**/*.{js,jsx,ts,tsx,json,css,less,md}": [
+    "prettier --write",
+    "git add"
+  ]
+}
+```
+详细的配置说明可参考 [lint-staged 文档](https://github.com/okonet/lint-staged#configuration)。上述配置中，在 src 文件夹下的 js、jsx、ts、tsx、json、css、less、md 文件都会在提交前自动格式化。
+
 #### 2020/03/09
 [Yarn vs NPM](https://www.keycdn.com/blog/npm-vs-yarn)
 npm 和 yarn 都是包管理工具，yarn 是 Facebook 研发的，意在解决 npm 一致性、安全性和速度方面的一些问题。两者只是安装的手段不同，内部依赖的 npm structure 是相同的。yarn 相比 npm 的优势在于：
 1. yarn.lock 文件可以保证每个设备上安装的包都是相同的
 2. npm 只能通过序列化的方式一个接一个地安装包，yarn 可以同时执行多个安装步骤，因此速度更快
 3. npm 会自动从依赖项运行代码并允许动态添加软件包，yarn 只能从 yarn.lock 或 package.json 文件安装，因此更安全；且其在安装前使用校验和，以确保每个包的完整性
+
+关于如何从 npm 迁移到 yarn ，以及一些常用命令的比对，可以参考[官方文档](https://classic.yarnpkg.com/en/docs/migrating-from-npm/)。常用的有：
+
+|NPM|Yarn|
+|---|---|
+|npm install | yarn add|
+|npm install [package] --save|yarn add [package]|
+|npm install [package] --save-dev|yarn add [package --dev]|
+|npm install [package] --global|yarn global add [package]|
+|npm uninstall [package]|yarn remove [package]|
+
+注：`--save-dev` 用于安装仅开发阶段所需的依赖，`--save` 用于安装应用运行所需的依赖。
 
 #### 2020/03/07
 一、TDZ: [What is the temporal dead zone?](https://stackoverflow.com/questions/33198849/what-is-the-temporal-dead-zone)
